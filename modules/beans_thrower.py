@@ -13,8 +13,25 @@ class BeansThrower(Matcher, Cursor):
         super().__init__()
         self.rel_path = 'static/templates/town/demon_parade/'
 
-    def throw_beans(self):
+    def throw_beans(self, index: str = ''):
+        # Choose the friend
         self.__invite_friends()
+        scatter = self.__get_scatter()
+        cur_index = 0
+        if index:
+            cur_index = int(index)
+        super().left_click(scatter[cur_index], (1, 2))
+
+    def __get_scatter(self):
+        scatter = pt_dict['town']['demon_parade']['scatter']
+        if not scatter:
+            x, y = super().match(super().get_path(f'{self.rel_path}friends.png'))[0]
+            scatter = pt_dict['town']['demon_parade']['scatter'] = [(x + 100, y + 64), (x + 316, y + 64),
+                                                                    (x + 100, y + 131), (x + 316, y + 131),
+                                                                    (x + 100, y + 199), (x + 316, y + 199),
+                                                                    (x + 100, y + 266), (x + 316, y + 266)]
+        print(f'scatter: {scatter}')
+        return scatter
 
     def __invite_friends(self):
         pt_invite = pt_dict['town']['demon_parade']['invite']

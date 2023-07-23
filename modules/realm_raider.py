@@ -16,16 +16,15 @@ class RealmRaider(Matcher, Cursor):
         self.rel_path = 'static/templates/explore_map/realm_raid/'
         self.guild_defeated_count = 0
 
-    def raid(self):
-        is_individual = len(super().match(
-            super().get_path(f'{self.rel_path}individual_active.png'), threshold=0.98
-        )) != 0
+    def raid(self, is_cooldown=False):
+        is_individual = len(super().match(super().get_path(f'{self.rel_path}individual_active.png'), is_multiple=False,
+                                          is_with_colour=True)) != 0
         if is_individual:
             self.__individual_raid()
         else:
-            self.__guild_raid()
+            self.__guild_raid(is_cooldown=is_cooldown)
 
-    def __guild_raid(self, index: str = ''):
+    def __guild_raid(self, index: str = '', is_cooldown=False):
         # Choose the realm
         scatter = self.__get_guild_scatter()
         cur_index = self.guild_defeated_count
@@ -34,7 +33,7 @@ class RealmRaider(Matcher, Cursor):
         super().left_click(scatter[cur_index], (1, 2))
 
         pt_raid_list = super().match(
-            super().get_path(f'{self.rel_path}raid.png'), threshold=0.92)
+            super().get_path(f'{self.rel_path}raid.png'), thresh_mul=0.92)
         print(f'pt_raid_list: {pt_raid_list}')
         # Successful penetration
         if not pt_raid_list:
@@ -42,10 +41,18 @@ class RealmRaider(Matcher, Cursor):
 
         super().left_click(pt_raid_list[0], 2)  # Raid
         # The realm has been raided
-        pt_raid_list = super().match(super().get_path(f'{self.rel_path}raid.png'), threshold=0.92)
+        pt_raid_list = super().match(super().get_path(f'{self.rel_path}raid.png'), is_multiple=False, thresh_sgl=0.02,
+                                     is_with_colour=True)
         if pt_raid_list:
             super().left_click(scatter[cur_index + 1], (1, 2))
             return self.__guild_raid(str(cur_index + 1))
+        # Cooldown
+        if is_cooldown:
+            pt_raid_list = super().match(super().get_path(f'{self.rel_path}raid.png'), is_multiple=False,
+                                         thresh_sgl=0.02, is_with_colour=True)
+            if not pt_raid_list:
+                time.sleep(1800)
+                return self.__guild_raid()
 
         time.sleep(2)
         self.__mark_ghost()
@@ -57,7 +64,7 @@ class RealmRaider(Matcher, Cursor):
             else:
                 time.sleep(1)
             super().capture()
-            pt_victory_list = super().match(super().get_path(f'{self.rel_path}victory.png'), False, threshold=0.96)
+            pt_victory_list = super().match(super().get_path(f'{self.rel_path}victory.png'), False, thresh_mul=0.96)
             if pt_victory_list:
                 time.sleep(1)
                 super().left_click(pt_victory_list[0], (4, 5))
@@ -80,7 +87,7 @@ class RealmRaider(Matcher, Cursor):
             pt_ghost = pt
         super().left_click(pt_ghost, 0.4, True)
         super().capture()
-        is_marked_light = len(super().match(super().get_path(f'{self.rel_path}mark.png'), False, threshold=0.9)) != 0
+        is_marked_light = len(super().match(super().get_path(f'{self.rel_path}mark.png'), False, thresh_mul=0.9)) != 0
         print(f'is_marked[light]: {is_marked_light}')
         if is_marked_light:
             is_marked = True
@@ -96,12 +103,12 @@ class RealmRaider(Matcher, Cursor):
             return
         super().capture()
         pt_ghost_light_list = super().match(
-            super().get_path(f'{self.rel_path}ghost.png'), False, threshold=0.84)
+            super().get_path(f'{self.rel_path}ghost.png'), False, thresh_mul=0.84)
         print(f'pt_ghost_list[light]: {pt_ghost_light_list}')
         if pt_ghost_light_list:
             return pt_ghost_light_list[0]
         pt_ghost_dark_list = super().match(
-            super().get_path(f'{self.rel_path}ghost_dark.png'), False, threshold=0.82)
+            super().get_path(f'{self.rel_path}ghost_dark.png'), False, thresh_mul=0.82)
         print(f'pt_ghost_list[dark]: {pt_ghost_dark_list}')
         if pt_ghost_dark_list:
             return pt_ghost_dark_list[0]
@@ -111,10 +118,10 @@ class RealmRaider(Matcher, Cursor):
     def __get_guild_scatter(self):
         scatter = pt_dict['explore_map']['realm_raid']['guild']['scatter']
         if not scatter:
-            x, y = super().match(super().get_path(f'{self.rel_path}realm_raid.png'), threshold=0.95)[0]
+            x, y = super().match(super().get_path(f'{self.rel_path}buffs.png'))[0]
             scatter = pt_dict['explore_map']['realm_raid'][
-                'guild']['scatter'] = [(x + 25, y + 104), (x + 295, y + 104), (x + 25, y + 212), (x + 295, y + 212),
-                                       (x + 25, y + 320), (x + 295, y + 320)]
+                'guild']['scatter'] = [(x + 437, y + 34), (x + 707, y + 34), (x + 437, y + 142), (x + 707, y + 142),
+                                       (x + 437, y + 250), (x + 707, y + 250)]
         print(f'scatter: {scatter}')
         return scatter
 
@@ -125,4 +132,4 @@ class RealmRaider(Matcher, Cursor):
 
 if __name__ == '__main__':
     realm_raider = RealmRaider()
-    realm_raider.raid()
+    realm_raider.raid(True)

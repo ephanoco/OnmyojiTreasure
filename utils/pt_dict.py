@@ -14,6 +14,7 @@ pt_dict = {
     'town': {
         'demon_parade': {
             'invite': (),
+            'scatter': [],
         }
     }
 }
