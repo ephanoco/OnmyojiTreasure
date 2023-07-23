@@ -41,10 +41,7 @@ class Matcher(Capturer, Util):
             cv.rectangle(img_rgb, top_left, bottom_right, 255, 2)
             cv.imwrite('res.png', img_rgb)
             pt = self.__get_converted_pt((top + w / 2, left + h / 2))
-            if min_val <= thresh_sgl:
-                return pt
-            else:
-                return ()
+            return pt if min_val <= thresh_sgl else ()
 
     @staticmethod
     def __get_res(is_with_colour, img_rgb, is_multiple, tmpl_rgb):

@@ -19,17 +19,12 @@ class RealmRaider(Matcher, Cursor):
     def raid(self, is_cooldown=False):
         is_individual = len(super().match(super().get_path(f'{self.rel_path}individual_active.png'), is_multiple=False,
                                           is_with_colour=True)) != 0
-        if is_individual:
-            self.__individual_raid()
-        else:
-            self.__guild_raid(is_cooldown=is_cooldown)
+        self.__individual_raid() if is_individual else self.__guild_raid(is_cooldown=is_cooldown)
 
     def __guild_raid(self, index: str = '', is_cooldown=False):
         # Choose the realm
         scatter = self.__get_guild_scatter()
-        cur_index = self.guild_defeated_count
-        if index:
-            cur_index = int(index)
+        cur_index = self.guild_defeated_count if not index else int(index)
         super().left_click(scatter[cur_index], (1, 2))
 
         pt_raid_list = super().match(
@@ -81,10 +76,7 @@ class RealmRaider(Matcher, Cursor):
     def __mark_ghost(self, pt=(), times=0):
         if times == 5:
             return
-        if not pt:
-            pt_ghost = self.__get_pt_ghost()
-        else:
-            pt_ghost = pt
+        pt_ghost = self.__get_pt_ghost() if not pt else pt
         super().left_click(pt_ghost, 0.4, True)
         super().capture()
         is_marked_light = len(super().match(super().get_path(f'{self.rel_path}mark.png'), False, thresh_mul=0.9)) != 0

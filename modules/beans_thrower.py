@@ -17,9 +17,7 @@ class BeansThrower(Matcher, Cursor):
         # Choose the friend
         self.__invite_friends()
         scatter = self.__get_scatter()
-        cur_index = 0
-        if index:
-            cur_index = int(index)
+        cur_index = 0 if not index else int(index)
         super().left_click(scatter[cur_index], (1, 2))
 
     def __get_scatter(self):
