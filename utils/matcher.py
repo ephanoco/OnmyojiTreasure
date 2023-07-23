@@ -70,7 +70,6 @@ class Matcher(Capturer, Util):
 if __name__ == '__main__':
     matcher = Matcher()
     util = Util()
-    pt_list = matcher.match(util.get_path('static/templates/explore_map/realm_raid/raid.png'), False, False,
-                            thresh_sgl=0.02,
-                            is_with_colour=True)
-    print(f'pt_list: {pt_list}')
+    pt = matcher.match(util.get_path('static/templates/explore_map/realm_raid/raid.png'), False, False,
+                       thresh_sgl=0.02, is_with_colour=True)
+    print(f'pt: {pt}')

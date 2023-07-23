@@ -17,8 +17,9 @@ class RealmRaider(Matcher, Cursor):
         self.guild_defeated_count = 0
 
     def raid(self, is_cooldown=False):
-        is_individual = len(super().match(super().get_path(f'{self.rel_path}individual_active.png'), is_multiple=False,
-                                          is_with_colour=True)) != 0
+        is_individual = len(super().match(
+            super().get_path(f'{self.rel_path}individual_active.png'), thresh_mul=0.98
+        )) != 0
         self.__individual_raid() if is_individual else self.__guild_raid(is_cooldown=is_cooldown)
 
     def __guild_raid(self, index: str = '', is_cooldown=False):
@@ -27,27 +28,23 @@ class RealmRaider(Matcher, Cursor):
         cur_index = self.guild_defeated_count if not index else int(index)
         super().left_click(scatter[cur_index], (1, 2))
 
-        pt_raid_list = super().match(
-            super().get_path(f'{self.rel_path}raid.png'), thresh_mul=0.92)
-        print(f'pt_raid_list: {pt_raid_list}')
+        pt_raid = super().match(super().get_path(f'{self.rel_path}raid.png'), is_multiple=False,
+                                thresh_sgl=0.02, is_with_colour=True)
+        print(f'pt_raid: {pt_raid}')
+        # Cooldown
+        if is_cooldown and not pt_raid:
+            time.sleep(1800)
+            return self.__guild_raid()
         # Successful penetration
-        if not pt_raid_list:
+        if not pt_raid:
             return
 
-        super().left_click(pt_raid_list[0], 2)  # Raid
+        super().left_click(pt_raid, 2)  # Raid
         # The realm has been raided
-        pt_raid_list = super().match(super().get_path(f'{self.rel_path}raid.png'), is_multiple=False, thresh_sgl=0.02,
-                                     is_with_colour=True)
+        pt_raid_list = super().match(super().get_path(f'{self.rel_path}raid.png'), thresh_mul=0.92)
         if pt_raid_list:
             super().left_click(scatter[cur_index + 1], (1, 2))
             return self.__guild_raid(str(cur_index + 1))
-        # Cooldown
-        if is_cooldown:
-            pt_raid_list = super().match(super().get_path(f'{self.rel_path}raid.png'), is_multiple=False,
-                                         thresh_sgl=0.02, is_with_colour=True)
-            if not pt_raid_list:
-                time.sleep(1800)
-                return self.__guild_raid()
 
         time.sleep(2)
         self.__mark_ghost()
