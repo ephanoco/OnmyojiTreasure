@@ -15,7 +15,8 @@ class OnmyojiTreasure(RealmRaider):
 
 onmyoji_treasure = OnmyojiTreasure()
 if onmyoji_treasure.is_admin():
-    onmyoji_treasure.raid()
+    is_cooldown = onmyoji_treasure.query_yes_no("Is cooldown?")
+    onmyoji_treasure.raid(is_cooldown)
 else:
     ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None,
                                         1)  # Re-run the program with admin rights
