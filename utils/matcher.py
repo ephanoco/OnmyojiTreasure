@@ -71,5 +71,5 @@ if __name__ == '__main__':
     matcher = Matcher()
     util = Util()
     pt = matcher.match(util.get_path('static/templates/explore_map/realm_raid/raid.png'), False, False,
-                       thresh_sgl=0.02, is_with_colour=True)
+                       thresh_sgl=0.01, is_with_colour=True)
     print(f'pt: {pt}')

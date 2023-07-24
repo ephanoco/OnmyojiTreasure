@@ -29,14 +29,17 @@ class RealmRaider(Matcher, Cursor):
         super().left_click(scatter[cur_index], (1, 2))
 
         pt_raid_list = super().match(super().get_path(f'{self.rel_path}raid.png'),
-                                     thresh_mul=0.92) if not is_cooldown else super().match(
-            super().get_path(f'{self.rel_path}raid.png'), is_multiple=False,
-            thresh_sgl=0.02, is_with_colour=True)
+                                     thresh_mul=0.92) if not is_cooldown else [
+            super().match(super().get_path(f'{self.rel_path}raid.png'), is_multiple=False, thresh_sgl=0.01,
+                          is_with_colour=True)]
         print(f'pt_raid_list: {pt_raid_list}')
-        if not pt_raid_list:
-            if not is_cooldown:  # Successful penetration
+        if not is_cooldown:
+            # Successful penetration
+            if not pt_raid_list:
                 return
-            else:  # Cooldown
+        else:
+            # Cooldown
+            if not pt_raid_list[0]:
                 time.sleep(1800)
                 return self.__guild_raid(True)
 
