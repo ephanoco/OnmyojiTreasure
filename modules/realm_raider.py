@@ -111,7 +111,11 @@ class RealmRaider(Matcher, Cursor):
     def __get_guild_scatter(self):
         scatter = pt_dict['explore_map']['realm_raid']['guild']['scatter']
         if not scatter:
-            x, y = super().match(super().get_path(f'{self.rel_path}buffs.png'), thresh_mul=0.97)[0]
+            pt_buffs = pt_dict['explore_map']['realm_raid']['guild']['buffs']
+            if not pt_buffs:
+                pt_buffs = pt_dict['explore_map']['realm_raid']['guild']['buffs'] = \
+                super().match(super().get_path(f'{self.rel_path}buffs.png'), thresh_mul=0.97)[0]
+            x, y = pt_buffs
             scatter = pt_dict['explore_map']['realm_raid'][
                 'guild']['scatter'] = [(x + 437, y + 34), (x + 707, y + 34), (x + 437, y + 142), (x + 707, y + 142),
                                        (x + 437, y + 250), (x + 707, y + 250)]

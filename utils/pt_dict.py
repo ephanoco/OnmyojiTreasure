@@ -7,6 +7,7 @@ pt_dict = {
     'explore_map': {
         'realm_raid': {
             'guild': {
+                'buffs': (),
                 'scatter': [],
             }
         },
