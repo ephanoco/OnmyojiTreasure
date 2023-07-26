@@ -8,21 +8,47 @@ import numpy as np
 import win32gui
 
 from utils.capturer import Capturer
+from utils.cursor import Cursor
+from utils.pt_dict import pt_dict
 from utils.util import Util
 
 
-class Matcher(Capturer, Util):
+class Matcher(Capturer, Cursor):
     def __init__(self):
         super().__init__()
 
     def match(self, tmpl_path, capture=True, is_multiple=True, thresh_mul=0.99, thresh_sgl=0.03, is_with_colour=False):
+        kwargs = locals()
         if capture:
             super().capture()
         img_rgb = cv.imread(super().get_path('static/screenshot.png'))
+        self.__mission_invitation_handler(img_rgb, kwargs)
         tmpl_rgb = cv.imread(tmpl_path)
         return self.match_template(img_rgb, tmpl_rgb, is_multiple, thresh_mul, thresh_sgl, is_with_colour)
 
-    def match_template(self, img_rgb, tmpl_rgb, is_multiple, thresh_mul, thresh_sgl, is_with_colour):
+    def __mission_invitation_handler(self, img_rgb, kwargs):
+        rel_path = 'static/templates/wanted_quests/'
+        tmpl_inv_rgb = cv.imread(super().get_path(f'{rel_path}invitation.png'))
+        pt_inv_list = self.match_template(img_rgb, tmpl_inv_rgb)
+        if pt_inv_list:
+            tmpl_gold_rgb = cv.imread(super().get_path(f'{rel_path}gold.png'))
+            pt_gold_list = self.match_template(img_rgb, tmpl_gold_rgb)
+            pt_accept, pt_reject = self.__get_pt_accept_reject(pt_inv_list[0])
+            super().left_click(pt_reject if pt_gold_list else pt_accept, (1, 2))
+            return self.match(**kwargs)
+
+    def __get_pt_accept_reject(self, pt_inv):
+        x, y = pt_inv
+        pt_accept = pt_dict['wanted_quests']['accept']
+        if not pt_accept:
+            pt_accept = pt_dict['wanted_quests']['accept'] = (x + 255, y + 195)
+        pt_reject = pt_dict['wanted_quests']['reject']
+        if not pt_reject:
+            pt_reject = pt_dict['wanted_quests']['reject'] = (x + 254, y + 276)
+        return [pt_accept, pt_reject]
+
+    def match_template(self, img_rgb, tmpl_rgb, is_multiple=True, thresh_mul=0.99, thresh_sgl=0.03,
+                       is_with_colour=False):
         res = self.__get_res(is_with_colour, img_rgb, is_multiple, tmpl_rgb)
         w, h = tmpl_rgb.shape[1::-1]  # = tmpl_gray.shape[::-1]
         if is_multiple:
@@ -70,6 +96,6 @@ class Matcher(Capturer, Util):
 if __name__ == '__main__':
     matcher = Matcher()
     util = Util()
-    pt = matcher.match(util.get_path('static/templates/explore_map/realm_raid/raid.png'), False, False,
-                       thresh_sgl=0.01, is_with_colour=True)
-    print(f'pt: {pt}')
+    pt_list = matcher.match(util.get_path('static/templates/explore_map/realm_raid/individual_active.png'), False,
+                            thresh_mul=0.98)
+    print(f'pt_list: {pt_list}')

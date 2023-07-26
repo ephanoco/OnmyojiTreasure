@@ -17,5 +17,9 @@ pt_dict = {
             'invite': (),
             'scatter': [],
         }
+    },
+    'wanted_quests': {
+        'accept': (),
+        'reject': (),
     }
 }
