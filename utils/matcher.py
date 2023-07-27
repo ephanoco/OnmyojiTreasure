@@ -28,13 +28,15 @@ class Matcher(Capturer, Cursor):
 
     def __mission_invitation_handler(self, img_rgb, kwargs):
         rel_path = 'static/templates/wanted_quests/'
-        tmpl_inv_rgb = cv.imread(super().get_path(f'{rel_path}invitation.png'))
-        pt_inv_list = self.match_template(img_rgb, tmpl_inv_rgb)
+        pt_inv_list = self.match_template(img_rgb, cv.imread(super().get_path(f'{rel_path}invitation.png')))
         if pt_inv_list:
-            tmpl_gold_rgb = cv.imread(super().get_path(f'{rel_path}gold.png'))
-            pt_gold_list = self.match_template(img_rgb, tmpl_gold_rgb)
+            pt_gold_list = self.match_template(img_rgb, cv.imread(super().get_path(f'{rel_path}gold.png')))
             pt_accept, pt_reject = self.__get_pt_accept_reject(pt_inv_list[0])
-            super().left_click(pt_reject if pt_gold_list else pt_accept, (1, 2))
+            if not pt_gold_list:
+                super().left_click(pt_accept, (1, 2))
+            else:
+                pt_shard_list = self.match_template(img_rgb, cv.imread(super().get_path(f'{rel_path}shard.png')))
+                super().left_click(pt_accept if not pt_shard_list else pt_reject, (1, 2))
             return self.match(**kwargs)
 
     def __get_pt_accept_reject(self, pt_inv):
@@ -96,6 +98,5 @@ class Matcher(Capturer, Cursor):
 if __name__ == '__main__':
     matcher = Matcher()
     util = Util()
-    pt_list = matcher.match(util.get_path('static/templates/explore_map/realm_raid/individual_active.png'), False,
-                            thresh_mul=0.98)
+    pt_list = matcher.match(util.get_path('static/templates/wanted_quests/shard.png'), False)
     print(f'pt_list: {pt_list}')
