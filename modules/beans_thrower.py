@@ -13,9 +13,24 @@ class BeansThrower(Matcher, Cursor):
         super().__init__()
         self.rel_path = 'static/templates/town/demon_parade/'
 
-    def throw_beans(self, index: str = ''):
-        # Choose the friend
-        self.__invite_friends()
+    def throw_beans(self):
+        self.__invite_friends()  # Choose the friend
+        # Enter the ghost selection screen
+        pt_enter = pt_dict['town']['demon_parade']['enter']
+        if not pt_enter:
+            pt_enter = pt_dict['town']['demon_parade']['enter'] = super().match(
+                super().get_path(f'{self.rel_path}enter.png'))[0]
+        super().left_click(pt_enter, (1, 2))
+        # TODO
+
+    def __invite_friends(self, index: str = ''):
+        # Clicking on the '+' button
+        pt_invite = pt_dict['town']['demon_parade']['invite']
+        if not pt_invite:
+            pt_invite = pt_dict['town']['demon_parade']['invite'] = super().match(
+                super().get_path(f'{self.rel_path}invite.png'))[0]
+        super().left_click(pt_invite, (1, 2))
+        # Invite someone from friend list
         scatter = self.__get_scatter()
         cur_index = 0 if not index else int(index)
         super().left_click(scatter[cur_index], (1, 2))
@@ -30,13 +45,6 @@ class BeansThrower(Matcher, Cursor):
                                                                     (x + 100, y + 266), (x + 316, y + 266)]
         print(f'scatter: {scatter}')
         return scatter
-
-    def __invite_friends(self):
-        pt_invite = pt_dict['town']['demon_parade']['invite']
-        if not pt_invite:
-            pt_invite = pt_dict['town']['demon_parade']['invite'] = super().match(
-                super().get_path(f'{self.rel_path}invite.png'))[0]
-        super().left_click(pt_invite, (1, 2))
 
 
 if __name__ == '__main__':

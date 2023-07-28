@@ -17,14 +17,16 @@ class Matcher(Capturer, Cursor):
     def __init__(self):
         super().__init__()
 
-    def match(self, tmpl_path, capture=True, is_multiple=True, thresh_mul=0.99, thresh_sgl=0.03, is_with_colour=False):
+    def match(self, tmpl_path, capture=True, is_multiple=True, thresh_mul=0.99, thresh_sgl=0.03, is_with_colour=False,
+              classification=1):
         kwargs = locals()
         if capture:
             super().capture()
         img_rgb = cv.imread(super().get_path('static/screenshot.png'))
         self.__mission_invitation_handler(img_rgb, kwargs)
         tmpl_rgb = cv.imread(tmpl_path)
-        return self.match_template(img_rgb, tmpl_rgb, is_multiple, thresh_mul, thresh_sgl, is_with_colour)
+        return self.match_template(img_rgb, tmpl_rgb, is_multiple, thresh_mul, thresh_sgl,
+                                   is_with_colour) if classification == 1 else self.match_features(img_rgb, tmpl_rgb)
 
     def __mission_invitation_handler(self, img_rgb, kwargs):
         rel_path = 'static/templates/wanted_quests/'
@@ -57,17 +59,17 @@ class Matcher(Capturer, Cursor):
             loc = np.where(res >= thresh_mul)
             pt_list = []
             for pt in zip(*loc[::-1]):
-                cv.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), 255, 2)
+                # cv.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), 255, 2)
                 pt = self.__get_converted_pt((pt[0] + w / 2, pt[1] + h / 2))
                 pt_list.append(pt)
-            cv.imwrite('res.png', img_rgb)
+            # cv.imwrite('res.png', img_rgb)
             return pt_list
         else:
             min_val, max_val, min_loc, max_loc = cv.minMaxLoc(res)
             top, left = top_left = min_loc
             bottom_right = (top_left[0] + w, top_left[1] + h)
-            cv.rectangle(img_rgb, top_left, bottom_right, 255, 2)
-            cv.imwrite('res.png', img_rgb)
+            # cv.rectangle(img_rgb, top_left, bottom_right, 255, 2)
+            # cv.imwrite('res.png', img_rgb)
             pt = self.__get_converted_pt((top + w / 2, left + h / 2))
             return pt if min_val <= thresh_sgl else ()
 
@@ -94,9 +96,57 @@ class Matcher(Capturer, Cursor):
         x, y = pt
         return win32gui.ClientToScreen(self.hwnd, (int(x), int(y)))
 
+    def match_features(self, img_rgb, tmpl_rgb):
+        # Find the key points and descriptors with SIFT
+        query_img = cv.cvtColor(tmpl_rgb, cv.COLOR_BGR2GRAY)
+        query_kp, query_des = self.__get_kp_des(query_img)
+        train_img = cv.cvtColor(img_rgb, cv.COLOR_BGR2GRAY)
+        train_kp, train_des = self.__get_kp_des(train_img)
+        matches = self.__flann_match(query_des, train_des)  # FLANN parameters
+        # matches_mask = [[0, 0] for i in range(len(matches))]  # Need to draw only good matches, so create a mask
+        # draw_params = dict(matchColor=(0, 255, 0),
+        #                    singlePointColor=(255, 0, 0),
+        #                    matchesMask=matches_mask,
+        #                    flags=cv.DrawMatchesFlags_DEFAULT)
+        # ratio test as per Lowe's paper
+        train_kp_list = []
+        for i, (m, n) in enumerate(matches):
+            if m.distance < 0.7 * n.distance:
+                # matches_mask[i] = [1, 0]
+                train_kp_list.append([train_kp[matches[i][0].trainIdx].pt[0], train_kp[matches[i][0].trainIdx].pt[1]])
+        train_kp = self.__get_train_kp(train_kp_list) if len(train_kp_list) else ()
+
+        # output_img = cv.drawMatchesKnn(query_img, query_kp, train_img, train_kp, matches, None, **draw_params)
+        # cv.imwrite('res.png', output_img)
+        return train_kp
+
+    def __get_train_kp(self, train_kp_list):
+        x, y = (0, 0)
+        for i in range(len(train_kp_list)):
+            x += train_kp_list[i][0]
+            y += train_kp_list[i][1]
+        return self.__get_converted_pt((x / len(train_kp_list), y / len(train_kp_list)))
+
+    @staticmethod
+    def __flann_match(query_des, train_des):
+        FLANN_INDEX_KDTREE = 1
+        index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
+        search_params = dict(checks=50)
+        flann = cv.FlannBasedMatcher(index_params, search_params)
+        matches = flann.knnMatch(query_des, train_des, k=2)
+        return matches
+
+    @staticmethod
+    def __get_kp_des(img):
+        # noinspection PyUnresolvedReferences
+        sift = cv.SIFT_create()
+        kp, des = sift.detectAndCompute(img, None)
+        return kp, des
+
 
 if __name__ == '__main__':
     matcher = Matcher()
     util = Util()
-    pt_list = matcher.match(util.get_path('static/templates/wanted_quests/shard.png'), False)
-    print(f'pt_list: {pt_list}')
+    train_kp = matcher.match(util.get_path('static/templates/town/demon_parade/ghosts/hitotsume_kozou.png'), False,
+                             classification=2)
+    print(f'train_kp: {train_kp}')

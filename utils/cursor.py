@@ -41,5 +41,5 @@ class Cursor:
 
 if __name__ == '__main__':
     cursor = Cursor()
-    pt = (1173, 282)
+    pt = (372, 459)
     cursor.left_click(pt)

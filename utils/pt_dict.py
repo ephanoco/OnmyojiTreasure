@@ -16,6 +16,7 @@ pt_dict = {
         'demon_parade': {
             'invite': (),
             'scatter': [],
+            'enter': ()
         }
     },
     'wanted_quests': {
