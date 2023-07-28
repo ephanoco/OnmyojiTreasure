@@ -103,29 +103,32 @@ class Matcher(Capturer, Cursor):
         train_img = cv.cvtColor(img_rgb, cv.COLOR_BGR2GRAY)
         train_kp, train_des = self.__get_kp_des(train_img)
         matches = self.__flann_match(query_des, train_des)  # FLANN parameters
-        # matches_mask = [[0, 0] for i in range(len(matches))]  # Need to draw only good matches, so create a mask
-        # draw_params = dict(matchColor=(0, 255, 0),
-        #                    singlePointColor=(255, 0, 0),
-        #                    matchesMask=matches_mask,
-        #                    flags=cv.DrawMatchesFlags_DEFAULT)
+        matches_mask = [[0, 0] for i in range(len(matches))]  # Need to draw only good matches, so create a mask
+        draw_params = dict(matchColor=(0, 255, 0),
+                           singlePointColor=(255, 0, 0),
+                           matchesMask=matches_mask,
+                           flags=cv.DrawMatchesFlags_DEFAULT)
         # ratio test as per Lowe's paper
-        train_kp_list = []
+        good_matches_train = []
         for i, (m, n) in enumerate(matches):
+            # TODO
             if m.distance < 0.7 * n.distance:
-                # matches_mask[i] = [1, 0]
-                train_kp_list.append([train_kp[matches[i][0].trainIdx].pt[0], train_kp[matches[i][0].trainIdx].pt[1]])
-        train_kp = self.__get_train_kp(train_kp_list) if len(train_kp_list) else ()
+                matches_mask[i] = [1, 0]
+                good_matches_train.append(
+                    [train_kp[matches[i][0].trainIdx].pt[0], train_kp[matches[i][0].trainIdx].pt[1]])
+        print(f'len(good_matches_train): {len(good_matches_train)}')
+        good_match_train = self.__get_good_match_train(good_matches_train) if len(good_matches_train) else ()
 
-        # output_img = cv.drawMatchesKnn(query_img, query_kp, train_img, train_kp, matches, None, **draw_params)
-        # cv.imwrite('res.png', output_img)
-        return train_kp
+        output_img = cv.drawMatchesKnn(query_img, query_kp, train_img, train_kp, matches, None, **draw_params)
+        cv.imwrite('res.png', output_img)
+        return good_match_train
 
-    def __get_train_kp(self, train_kp_list):
+    def __get_good_match_train(self, good_matches_train):
         x, y = (0, 0)
-        for i in range(len(train_kp_list)):
-            x += train_kp_list[i][0]
-            y += train_kp_list[i][1]
-        return self.__get_converted_pt((x / len(train_kp_list), y / len(train_kp_list)))
+        for i in range(len(good_matches_train)):
+            x += good_matches_train[i][0]
+            y += good_matches_train[i][1]
+        return self.__get_converted_pt((x / len(good_matches_train), y / len(good_matches_train)))
 
     @staticmethod
     def __flann_match(query_des, train_des):
@@ -147,6 +150,8 @@ class Matcher(Capturer, Cursor):
 if __name__ == '__main__':
     matcher = Matcher()
     util = Util()
-    train_kp = matcher.match(util.get_path('static/templates/town/demon_parade/ghosts/hitotsume_kozou.png'), False,
-                             classification=2)
-    print(f'train_kp: {train_kp}')
+    # train_kp = matcher.match(util.get_path('static/templates/town/demon_parade/ghosts/ame_onna.png'), False,
+    #                          classification=2)
+    # print(f'train_kp: {train_kp}')
+    pt_list = matcher.match(util.get_path('static/templates/explore_map/realm_raid/ghost.png'), False)
+    print(f'pt_list: {pt_list}')

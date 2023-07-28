@@ -94,12 +94,12 @@ class RealmRaider(Matcher, Cursor):
     def __get_pt_ghost(self):
         super().capture()
         pt_ghost_light_list = super().match(
-            super().get_path(f'{self.rel_path}ghost.png'), False, thresh_mul=0.8)
+            super().get_path(f'{self.rel_path}nickname.png'), False, thresh_mul=0.8)
         print(f'pt_ghost_list[light]: {pt_ghost_light_list}')
         if pt_ghost_light_list:
             return pt_ghost_light_list[0]
         pt_ghost_dark_list = super().match(
-            super().get_path(f'{self.rel_path}ghost_dark.png'), False, thresh_mul=0.8)
+            super().get_path(f'{self.rel_path}nickname_dark.png'), False, thresh_mul=0.8)
         print(f'pt_ghost_list[dark]: {pt_ghost_dark_list}')
         if pt_ghost_dark_list:
             return pt_ghost_dark_list[0]

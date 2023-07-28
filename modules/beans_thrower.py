@@ -22,6 +22,11 @@ class BeansThrower(Matcher, Cursor):
                 super().get_path(f'{self.rel_path}enter.png'))[0]
         super().left_click(pt_enter, (1, 2))
         # TODO
+        # Choose the ghost
+        pt_start = pt_dict['town']['demon_parade']['start']
+        if not pt_start:
+            pt_start = pt_dict['town']['demon_parade']['start'] = super().match(
+                super().get_path(f'{self.rel_path}start.png'))[0]
 
     def __invite_friends(self, index: str = ''):
         # Clicking on the '+' button

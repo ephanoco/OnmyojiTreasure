@@ -21,8 +21,8 @@ class Cursor:
         x, y = pt
         offset_y = offset_x = random.randint(0, 10)
         if mark:
-            offset_x = random.randint(13, 23)
-            offset_y = random.randint(65, 75)
+            offset_x = random.randint(1, 11)
+            offset_y = random.randint(69, 79)
         return x + offset_x, y + offset_y
 
     def left_click(self, pt, delay: int | float | tuple = None, mark=False):
