@@ -13,13 +13,13 @@ from utils.pt_dict import pt_dict
 class RealmRaider(Matcher, Cursor):
     def __init__(self):
         super().__init__()
-        self.rel_path = 'static/templates/explore_map/realm_raid/'
+        self.rel_path = 'static/templates/exploration_map/realm_raid/'
         self.guild_defeated_count = 0
 
-    def raid(self, is_cooldown=False):
-        is_individual = len(super().match(
-            super().get_path(f'{self.rel_path}individual_active.png'), thresh_mul=0.98
-        )) != 0
+    def raid(self, is_individual, is_cooldown):
+        # is_individual = len(super().match(
+        #     super().get_path(f'{self.rel_path}individual_active.png'), thresh_mul=0.98
+        # )) != 0
         self.__individual_raid() if is_individual else self.__guild_raid(is_cooldown)
 
     def __guild_raid(self, is_cooldown, index: str = ''):
@@ -50,7 +50,7 @@ class RealmRaider(Matcher, Cursor):
             super().left_click(scatter[cur_index + 1], (1, 2))
             return self.__guild_raid(is_cooldown, str(cur_index + 1))
 
-        time.sleep(2)
+        time.sleep(3)
         self.__mark_ghost()
         is_first_loop = True
         while True:
@@ -111,14 +111,14 @@ class RealmRaider(Matcher, Cursor):
         return self.__get_pt_nickname()
 
     def __get_guild_scatter(self):
-        scatter = pt_dict['explore_map']['realm_raid']['guild']['scatter']
+        scatter = pt_dict['exploration_map']['realm_raid']['guild']['scatter']
         if not scatter:
-            pt_buffs = pt_dict['explore_map']['realm_raid']['guild']['buffs']
+            pt_buffs = pt_dict['exploration_map']['realm_raid']['guild']['buffs']
             if not pt_buffs:
-                pt_buffs = pt_dict['explore_map']['realm_raid']['guild']['buffs'] = \
+                pt_buffs = pt_dict['exploration_map']['realm_raid']['guild']['buffs'] = \
                     super().match(super().get_path(f'{self.rel_path}buffs.png'), thresh_mul=0.97)[0]
             x, y = pt_buffs
-            scatter = pt_dict['explore_map']['realm_raid'][
+            scatter = pt_dict['exploration_map']['realm_raid'][
                 'guild']['scatter'] = [(x + 437, y + 34), (x + 707, y + 34), (x + 437, y + 142), (x + 707, y + 142),
                                        (x + 437, y + 250), (x + 707, y + 250)]
         print(f'scatter: {scatter}')
@@ -131,4 +131,4 @@ class RealmRaider(Matcher, Cursor):
 
 if __name__ == '__main__':
     realm_raider = RealmRaider()
-    realm_raider.raid()
+    realm_raider.raid(False, False)

@@ -23,10 +23,23 @@ class Util:
         except:
             return False
 
-    def get_converted_pt_list(self, pt_list):
+    @staticmethod
+    def get_converted_pt_list(pt_list):
         return sorted(pt_list, key=lambda x: x[1])
 
-    def query_yes_no(self, question, default="yes"):
+    @staticmethod
+    def query_mode(modes):
+        # Select the mode
+        for c, desc in modes.items():
+            print(f"{c}. {desc}")
+        choice = input("Select your mode: ")
+        while choice not in modes:
+            choice = input(f"Choose one of: {', '.join(modes)}: ")
+        print(f"Role: {modes[choice]}")
+        return choice
+
+    @staticmethod
+    def query_yes_no(question, default="yes"):
         """Ask a yes/no question via raw_input() and return their answer.
 
         "question" is a string that is presented to the user.

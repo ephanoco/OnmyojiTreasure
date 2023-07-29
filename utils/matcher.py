@@ -59,17 +59,20 @@ class Matcher(Capturer, Cursor):
             loc = np.where(res >= thresh_mul)
             pt_list = []
             for pt in zip(*loc[::-1]):
-                # cv.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), 255, 2)
+                if __name__ == '__main__':
+                    cv.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), 255, 2)
                 pt = self.__get_converted_pt((pt[0] + w / 2, pt[1] + h / 2))
                 pt_list.append(pt)
-            # cv.imwrite('res.png', img_rgb)
+            if __name__ == '__main__':
+                cv.imwrite('res.png', img_rgb)
             return pt_list
         else:
             min_val, max_val, min_loc, max_loc = cv.minMaxLoc(res)
             top, left = top_left = min_loc
             bottom_right = (top_left[0] + w, top_left[1] + h)
-            # cv.rectangle(img_rgb, top_left, bottom_right, 255, 2)
-            # cv.imwrite('res.png', img_rgb)
+            if __name__ == '__main__':
+                cv.rectangle(img_rgb, top_left, bottom_right, 255, 2)
+                cv.imwrite('res.png', img_rgb)
             pt = self.__get_converted_pt((top + w / 2, left + h / 2))
             return pt if min_val <= thresh_sgl else ()
 
@@ -103,24 +106,27 @@ class Matcher(Capturer, Cursor):
         train_img = cv.cvtColor(img_rgb, cv.COLOR_BGR2GRAY)
         train_kp, train_des = self.__get_kp_des(train_img)
         matches = self.__flann_match(query_des, train_des)  # FLANN parameters
-        matches_mask = [[0, 0] for i in range(len(matches))]  # Need to draw only good matches, so create a mask
+        matches_mask = [[0, 0] for i in range(
+            len(matches))] if __name__ != '__main__' else []  # Need to draw only good matches, so create a mask
         draw_params = dict(matchColor=(0, 255, 0),
                            singlePointColor=(255, 0, 0),
                            matchesMask=matches_mask,
-                           flags=cv.DrawMatchesFlags_DEFAULT)
+                           flags=cv.DrawMatchesFlags_DEFAULT) if __name__ != '__main__' else {}
         # ratio test as per Lowe's paper
         good_matches_train = []
         for i, (m, n) in enumerate(matches):
             # TODO
             if m.distance < 0.7 * n.distance:
-                matches_mask[i] = [1, 0]
+                if __name__ == '__main__':
+                    matches_mask[i] = [1, 0]
                 good_matches_train.append(
                     [train_kp[matches[i][0].trainIdx].pt[0], train_kp[matches[i][0].trainIdx].pt[1]])
         print(f'len(good_matches_train): {len(good_matches_train)}')
         good_match_train = self.__get_good_match_train(good_matches_train) if len(good_matches_train) else ()
 
-        output_img = cv.drawMatchesKnn(query_img, query_kp, train_img, train_kp, matches, None, **draw_params)
-        cv.imwrite('res.png', output_img)
+        if __name__ == '__main__':
+            output_img = cv.drawMatchesKnn(query_img, query_kp, train_img, train_kp, matches, None, **draw_params)
+            cv.imwrite('res.png', output_img)
         return good_match_train
 
     def __get_good_match_train(self, good_matches_train):
@@ -153,5 +159,5 @@ if __name__ == '__main__':
     # train_kp = matcher.match(util.get_path('static/templates/town/demon_parade/ghosts/ame_onna.png'), False,
     #                          classification=2)
     # print(f'train_kp: {train_kp}')
-    pt_list = matcher.match(util.get_path('static/templates/town/demon_parade/ghosts/ghost_03.png'), False)
+    pt_list = matcher.match(util.get_path('static/templates/exploration_map/soul_zones/sougenbi/challenge.png'), False)
     print(f'pt_list: {pt_list}')

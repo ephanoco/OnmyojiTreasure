@@ -4,13 +4,21 @@
 # @Author  : Samuel
 # @File    : pt_dict.py
 pt_dict = {
-    'explore_map': {
+    'exploration_map': {
         'realm_raid': {
             'guild': {
                 'buffs': (),
                 'scatter': [],
             }
         },
+        'soul_zones': {
+            'orochi': {},
+            'sougenbi': {
+                'challenge': ()
+            },
+            'fallen_sun': {},
+            'sea_of_eternity': {},
+        }
     },
     'town': {
         'demon_parade': {
