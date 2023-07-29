@@ -78,7 +78,7 @@ class RealmRaider(Matcher, Cursor):
         if times == 10:
             return
         pt_ghost = self.__get_pt_ghost() if not pt else pt
-        super().left_click(pt_ghost, 0.4, True)
+        super().left_click(pt_ghost, 0.4)
         super().capture()
         is_marked_light = len(super().match(super().get_path(f'{self.rel_path}mark.png'), False, thresh_mul=0.8)) != 0
         print(f'is_marked[light]: {is_marked_light}')
@@ -92,19 +92,23 @@ class RealmRaider(Matcher, Cursor):
             self.__mark_ghost(pt_ghost, times=times + 1)
 
     def __get_pt_ghost(self):
+        x, y = self.__get_pt_nickname()
+        return x + 6, y + 74
+
+    def __get_pt_nickname(self):
         super().capture()
-        pt_ghost_light_list = super().match(
+        pt_nickname_light_list = super().match(
             super().get_path(f'{self.rel_path}nickname.png'), False, thresh_mul=0.8)
-        print(f'pt_ghost_list[light]: {pt_ghost_light_list}')
-        if pt_ghost_light_list:
-            return pt_ghost_light_list[0]
-        pt_ghost_dark_list = super().match(
+        print(f'pt_nickname_list[light]: {pt_nickname_light_list}')
+        if pt_nickname_light_list:
+            return pt_nickname_light_list[0]
+        pt_nickname_dark_list = super().match(
             super().get_path(f'{self.rel_path}nickname_dark.png'), False, thresh_mul=0.8)
-        print(f'pt_ghost_list[dark]: {pt_ghost_dark_list}')
-        if pt_ghost_dark_list:
-            return pt_ghost_dark_list[0]
+        print(f'pt_nickname_list[dark]: {pt_nickname_dark_list}')
+        if pt_nickname_dark_list:
+            return pt_nickname_dark_list[0]
         time.sleep(0.2)  # XXX
-        return self.__get_pt_ghost()
+        return self.__get_pt_nickname()
 
     def __get_guild_scatter(self):
         scatter = pt_dict['explore_map']['realm_raid']['guild']['scatter']

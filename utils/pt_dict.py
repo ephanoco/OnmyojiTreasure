@@ -15,9 +15,10 @@ pt_dict = {
     'town': {
         'demon_parade': {
             'invite': (),
-            'scatter': [],
+            'friend_list_scatter': [],
             'enter': (),
             'start': (),
+            'ghosts_scatter': [],
         }
     },
     'wanted_quests': {

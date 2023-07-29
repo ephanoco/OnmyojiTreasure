@@ -153,5 +153,5 @@ if __name__ == '__main__':
     # train_kp = matcher.match(util.get_path('static/templates/town/demon_parade/ghosts/ame_onna.png'), False,
     #                          classification=2)
     # print(f'train_kp: {train_kp}')
-    pt_list = matcher.match(util.get_path('static/templates/explore_map/realm_raid/ghost.png'), False)
+    pt_list = matcher.match(util.get_path('static/templates/town/demon_parade/ghosts/ghost_03.png'), False)
     print(f'pt_list: {pt_list}')

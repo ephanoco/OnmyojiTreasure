@@ -4,6 +4,7 @@
 # @Author  : Samuel
 # @File    : capturer.py
 import sys
+import time
 
 import win32con
 import win32gui
@@ -17,7 +18,7 @@ class Capturer(Window, Util):
     def __init__(self):
         super().__init__()
 
-    def capture(self):
+    def capture(self, is_with_timestamp=False, storage_path=''):
         if not self.hwnd:
             sys.exit()
         bitmap = win32ui.CreateBitmap()
@@ -35,7 +36,9 @@ class Capturer(Window, Util):
         mem_dc.BitBlt((0, 0), (cx, cy), hdc, (0, 0), win32con.SRCCOPY)
 
         # Save the screenshot
-        bitmap.SaveBitmapFile(mem_dc, super().get_path('static/screenshot.png'))
+        bitmap.SaveBitmapFile(mem_dc,
+                              super().get_path('static/screenshot.png') if not is_with_timestamp else super().get_path(
+                                  f'{storage_path}screenshot_{time.time()}.png'))
         # Release memory
         win32gui.DeleteObject(bitmap.GetHandle())
         hdc.DeleteDC()

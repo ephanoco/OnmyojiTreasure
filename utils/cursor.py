@@ -17,16 +17,13 @@ class Cursor:
         win32api.SetCursorPos((x, y))
 
     @staticmethod
-    def __get_offset_pt(pt, mark):
+    def __get_offset_pt(pt):
         x, y = pt
-        offset_y = offset_x = random.randint(0, 10)
-        if mark:
-            offset_x = random.randint(1, 11)
-            offset_y = random.randint(69, 79)
+        offset_y = offset_x = random.randint(-5, 5)  # random.randint(0, 10)
         return x + offset_x, y + offset_y
 
-    def left_click(self, pt, delay: int | float | tuple = None, mark=False):
-        offset_pt = self.__get_offset_pt(pt, mark)
+    def left_click(self, pt, delay: int | float | tuple = None):
+        offset_pt = self.__get_offset_pt(pt)
         self.__set_cursor_pos(offset_pt)
         time.sleep(0.1)
         x, y = offset_pt
