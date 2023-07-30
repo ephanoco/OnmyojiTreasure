@@ -19,7 +19,14 @@ class SoulZonesChallenger(Matcher):
         if not pt_challenge:
             pt_challenge = pt_dict['exploration_map']['soul_zones']['sougenbi']['challenge'] = super().match(
                 super().get_path(f'{self.rel_path}challenge.png'))[0]
-        super().left_click(pt_challenge, (4, 5))
+        super().left_click(pt_challenge, 2)
+        pt_challenge = super().match(
+            super().get_path(f'{self.rel_path}challenge.png'))[0]
+        # Scrolls ran out
+        if pt_challenge:
+            return
+
+        time.sleep(3)
         is_first_loop = True
         while True:
             if is_first_loop:
