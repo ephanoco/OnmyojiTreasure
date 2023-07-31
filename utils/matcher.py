@@ -160,11 +160,11 @@ if __name__ == '__main__':
     #         'static/templates/town/demon_parade/ghosts_to_be_selected/special_special_super_rare/suzuhiko_hime.png'),
     #     False,
     #     classification=2)
-    train_kp = matcher.match(
-        util.get_path(
-            'static/templates/town/demon_parade/ghosts_to_be_selected/super_rare/doumeki_03.png'),
-        False,
-        classification=2)
-    print(f'train_kp: {train_kp}')
-    # pt_list = matcher.match(util.get_path('static/templates/exploration_map/soul_zones/sougenbi/challenge.png'), False)
-    # print(f'pt_list: {pt_list}')
+    # train_kp = matcher.match(
+    #     util.get_path(
+    #         'static/templates/town/demon_parade/ghosts_to_be_selected/super_rare/doumeki_03.png'),
+    #     False,
+    #     classification=2)
+    # print(f'train_kp: {train_kp}')
+    pt_list = matcher.match(util.get_path('static/templates/exploration_map/realm_raid/buffs.png'), False)
+    print(f'pt_list: {pt_list}')
