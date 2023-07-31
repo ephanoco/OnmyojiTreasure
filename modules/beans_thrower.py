@@ -38,7 +38,7 @@ class BeansThrower(Matcher, Cursor):
 
     def __choose_ghost(self, pt_start):
         ghosts_scatter = self.__get_ghosts_scatter(pt_start)
-        super().left_click(ghosts_scatter[1], (1, 2))  # The middle ghost is selected by default
+        super().left_click(ghosts_scatter[2], (1, 2))  # The right ghost is selected by default
 
     @staticmethod
     def __get_ghosts_scatter(pt_start):

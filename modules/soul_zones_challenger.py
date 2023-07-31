@@ -30,7 +30,7 @@ class SoulZonesChallenger(Matcher):
         is_first_loop = True
         while True:
             if is_first_loop:
-                time.sleep(17)
+                time.sleep(39)  # 17
                 is_first_loop = False
             else:
                 time.sleep(1)

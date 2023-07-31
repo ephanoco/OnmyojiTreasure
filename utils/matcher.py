@@ -107,16 +107,15 @@ class Matcher(Capturer, Cursor):
         train_kp, train_des = self.__get_kp_des(train_img)
         matches = self.__flann_match(query_des, train_des)  # FLANN parameters
         matches_mask = [[0, 0] for i in range(
-            len(matches))] if __name__ != '__main__' else []  # Need to draw only good matches, so create a mask
+            len(matches))] if __name__ == '__main__' else []  # Need to draw only good matches, so create a mask
         draw_params = dict(matchColor=(0, 255, 0),
                            singlePointColor=(255, 0, 0),
                            matchesMask=matches_mask,
-                           flags=cv.DrawMatchesFlags_DEFAULT) if __name__ != '__main__' else {}
+                           flags=cv.DrawMatchesFlags_DEFAULT) if __name__ == '__main__' else {}
         # ratio test as per Lowe's paper
         good_matches_train = []
         for i, (m, n) in enumerate(matches):
-            # TODO
-            if m.distance < 0.7 * n.distance:
+            if m.distance < 0.5 * n.distance:
                 if __name__ == '__main__':
                     matches_mask[i] = [1, 0]
                 good_matches_train.append(
@@ -156,8 +155,16 @@ class Matcher(Capturer, Cursor):
 if __name__ == '__main__':
     matcher = Matcher()
     util = Util()
-    # train_kp = matcher.match(util.get_path('static/templates/town/demon_parade/ghosts/ame_onna.png'), False,
-    #                          classification=2)
-    # print(f'train_kp: {train_kp}')
-    pt_list = matcher.match(util.get_path('static/templates/exploration_map/soul_zones/sougenbi/challenge.png'), False)
-    print(f'pt_list: {pt_list}')
+    # train_kp = matcher.match(
+    #     util.get_path(
+    #         'static/templates/town/demon_parade/ghosts_to_be_selected/special_special_super_rare/suzuhiko_hime.png'),
+    #     False,
+    #     classification=2)
+    train_kp = matcher.match(
+        util.get_path(
+            'static/templates/town/demon_parade/ghosts_to_be_selected/super_rare/doumeki_03.png'),
+        False,
+        classification=2)
+    print(f'train_kp: {train_kp}')
+    # pt_list = matcher.match(util.get_path('static/templates/exploration_map/soul_zones/sougenbi/challenge.png'), False)
+    # print(f'pt_list: {pt_list}')
