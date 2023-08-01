@@ -1,10 +1,13 @@
 ### Todo
 
+- [ ] __individual_raid #feat
 - [ ] throw_beans: use Machine learning to apply #feat
 
 ### In Progress
 
-- [ ] challenge_sougenbi: Replace max level fodder #bug
+- [ ] challenge_sougenbi #bug
+    - [ ] Replace max level fodder
+    - [ ] Empty realm raid pass
 
 ### Done ✓
 
