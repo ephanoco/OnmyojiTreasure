@@ -16,7 +16,7 @@ pip install -r requirements.txt
 
 ## Usage
 
-Tip: Before running the script, make sure the emulator resolution is 1024 x 576, Sticky is turned on, and the lineup is
+Before running the script, make sure the emulator resolution is 1024 x 576, Sticky is turned on, and the lineup is
 locked.
 
 ```bash
@@ -26,6 +26,10 @@ python main.py
 After obtaining admin rights, you will see bash output the following:
 
 ![example](https://raw.githubusercontent.com/ephanoco/onmyoji_treasure/master/blob/example.png)
+
+The **guild realm raid** is automatically marked by default. Just rename the Shikigami that needs to be marked as '小绿'.
+It is recommended to place it in the second or third position to avoid blocking the green mark. If you do not need this
+function, please ignore it.
 
 ## Support
 
