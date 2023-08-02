@@ -7,8 +7,8 @@
 ### In Progress
 
 - [ ] refactor #refactor
-    - [ ] Extract public functions
-    - [ ] Adjust common templates
+    - [x] Extract public functions
+    - [x] Adjust common templates
     - [ ] tmpl_dict
     - [ ] Add function annotation
 - [ ] challenge_sougenbi #feat

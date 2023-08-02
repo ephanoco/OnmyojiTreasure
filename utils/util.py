@@ -4,9 +4,9 @@
 # @Author  : Samuel
 # @File    : util.py
 import ctypes
-import inspect
 import os.path
 import sys
+from functools import reduce
 
 
 class Util:
@@ -68,6 +68,30 @@ class Util:
                 return valid[choice]
             else:
                 sys.stdout.write("Please respond with 'yes' or 'no' " "(or 'y' or 'n').\n")
+
+    @staticmethod
+    def get_val(nested_dict: dict, key: str):
+        """
+        Get a nested dictionary item using single dot-delimited string path.
+        Example:
+        my_dict = {'a': {'b': {'c': 123}}}
+        get_val(my_dict, "a.b.c") # 123
+        """
+        return reduce(lambda d, k: d[k], key.split('.'), nested_dict)
+
+    @staticmethod
+    def set_val(nested_dict: dict, key: str, value):
+        """
+        Set a nested dictionary item using single dot-delimited string path.
+        Example:
+        set_val(my_dict, "very.very.many.levels", True)
+        """
+        *keys, last_key = key.split('.')
+        for k in keys:
+            if k not in nested_dict:
+                nested_dict[k] = dict()
+            nested_dict = nested_dict[k]
+        nested_dict[last_key] = value
 
 
 if __name__ == '__main__':
