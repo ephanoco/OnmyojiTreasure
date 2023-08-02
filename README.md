@@ -16,6 +16,7 @@ pip install -r requirements.txt
 
 ## Usage
 
+[!IMPORTANT]
 Before running the script, make sure the emulator resolution is 1024 x 576, Sticky is turned on, and the lineup is
 locked.
 
