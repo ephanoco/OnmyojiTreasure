@@ -158,8 +158,7 @@ class RealmRaider(BattleConcluder):
         def __vic_cb():
             # Milestone handler
             if cur_index == 2 or cur_index == 5 or cur_index == 8:
-                pt_realm_buffs = self.dict_realm_raid['realm_buffs']['pt']  # Get base pt
-                pt_vic = self.__get_rel_pt(pt_realm_buffs, 'realm_buffs.victory')
+                pt_vic = self.__get_rel_pt('realm_buffs', 'victory')
                 time.sleep(1)
                 super().left_click(pt_vic, (1, 2))
 
@@ -167,8 +166,7 @@ class RealmRaider(BattleConcluder):
                 self.__individual_raid(str(cur_index + 1))
             else:
                 # Lock the lineup
-                pt_realm_buffs = self.dict_realm_raid['realm_buffs']['pt']  # Get base pt
-                pt_lock = self.__get_rel_pt(pt_realm_buffs, 'realm_buffs.lock')
+                pt_lock = self.__get_rel_pt('realm_buffs', 'lock')
                 super().left_click(pt_lock, (1, 2))
 
                 self.__individual_raid()
@@ -177,8 +175,7 @@ class RealmRaider(BattleConcluder):
 
     def __retreat_two(self, scatter):
         # Unlock the lineup
-        pt_realm_buffs = self.dict_realm_raid['realm_buffs']['pt']
-        pt_lock = self.__get_rel_pt(pt_realm_buffs, 'realm_buffs.lock')
+        pt_lock = self.__get_rel_pt('realm_buffs', '.lock')
         super().left_click(pt_lock, (1, 2))
         super().left_click(scatter[-1], (1, 2))  # Choose the realm
         tmpl_raid = self.dict_realm_raid['raid']
@@ -191,16 +188,16 @@ class RealmRaider(BattleConcluder):
             return
 
         time.sleep(3)
-        pt_battle_buffs = self.__get_pt_battle_buffs()  # Get base pt
-        pt_return = self.__get_rel_pt(pt_battle_buffs, 'battle_buffs.return')
-        pt_confirm = self.__get_rel_pt(pt_battle_buffs, 'battle_buffs.confirm')
-        pt_retreat = self.__get_rel_pt(pt_battle_buffs, 'battle_buffs.retreat')
+        self.__get_pt_battle_buffs()  # Get base pt
+        pt_return = self.__get_rel_pt('battle_buffs', 'return')
+        pt_confirm = self.__get_rel_pt('battle_buffs', 'confirm')
+        pt_retreat = self.__get_rel_pt('battle_buffs', 'retreat')
         for i in range(2):
             super().left_click(pt_return, (1, 2))
             super().left_click(pt_confirm, (1, 2))  # XXX
             super().left_click(pt_retreat, (1, 2))
             super().left_click(pt_confirm, (5, 6))
-        pt_prepare = self.__get_rel_pt(pt_battle_buffs, 'battle_buffs.prepare')
+        pt_prepare = self.__get_rel_pt('battle_buffs', 'prepare')
         super().left_click(pt_prepare, (1, 2))
 
     def __get_pt_battle_buffs(self):
@@ -211,10 +208,13 @@ class RealmRaider(BattleConcluder):
         print(f'pt_battle_buffs: {pt_battle_buffs}')
         return pt_battle_buffs
 
-    @staticmethod
-    def __get_rel_pt(base_pt, dot_path):
-        x, y = base_pt
-        dict_pt = {
+    def __get_rel_pt(self, base, rel):
+        dict_base = {
+            'realm_buffs': self.dict_realm_raid['realm_buffs']['pt'],
+            'battle_buffs': self.dict_realm_raid['individual']['battle_buffs']['pt'],
+        }
+        x, y = dict_base[base]
+        dict_rel = {
             'realm_buffs': {
                 'lock': (x + 609, y + 333),
                 'victory': (x + 451, y + 292),
@@ -226,10 +226,9 @@ class RealmRaider(BattleConcluder):
                 'prepare': (x + 818, y - 65),
             },
         }
-        base, pt = dot_path.split('.')
-        return dict_pt[base][pt]
+        return dict_rel[base][rel]
 
 
 if __name__ == '__main__':
     realm_raider = RealmRaider()
-    realm_raider.raid(True, False)
+    realm_raider.raid(False, False)
