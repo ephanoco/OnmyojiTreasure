@@ -29,7 +29,7 @@ class SoulZonesChallenger(BattleConcluder):
             return
 
         time.sleep(3)
-        super().conclude_battle(39, lambda: self.challenge_sougenbi)  # first_loop_delay: 17
+        super().conclude_battle(39, lambda: self.challenge_sougenbi, False)  # first_loop_delay: 17
 
 
 if __name__ == '__main__':

@@ -62,7 +62,7 @@ class RealmRaider(BattleConcluder):
             if self.guild_defeated_count <= len(scatter):
                 self.__guild_raid(is_cooldown)
 
-        super().conclude_battle(10, __vic_cb, __def_cb)
+        super().conclude_battle(10, __vic_cb, def_cb=__def_cb)
 
     def __mark_ghost(self, pt=(), times=0):
         if times == 10:
