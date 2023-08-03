@@ -9,12 +9,11 @@
 - [ ] refactor #refactor
     - [x] Extract public functions
     - [x] Adjust common templates
-    - [ ] tmpl_dict
+    - [x] tmpl_dict
     - [ ] Add function annotation
 - [ ] challenge_sougenbi #feat
     - [ ] Empty realm raid pass
-        - [ ] __individual_raid
 
 ### Done ✓
 
-- [x] Create my first TODO.md
+- [x] __individual_raid

@@ -34,9 +34,3 @@ class Cursor:
             start, stop = delay
             random_delay = random.uniform(start, stop)
             time.sleep(random_delay)
-
-
-if __name__ == '__main__':
-    cursor = Cursor()
-    pt = (372, 459)
-    cursor.left_click(pt)

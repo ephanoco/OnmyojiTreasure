@@ -13,25 +13,19 @@ from utils.tmpl_dict import tmpl_dict
 class BeansThrower(Matcher, Cursor):
     def __init__(self):
         super().__init__()
-        self.dot_path = 'town.demon_parade'
+        self.dict_demon_parade = tmpl_dict['town']['demon_parade']
 
     def throw_beans(self):
         self.__invite_friends()  # Choose the friend
         # Enter the ghost selection screen
-        pt_enter_path = f'{self.dot_path}.enter.pt'
-        pt_enter = super().get_val(tmpl_dict, pt_enter_path)
+        pt_enter = self.dict_demon_parade['enter']['pt']
         if not pt_enter:
-            super().set_val(tmpl_dict, pt_enter_path,
-                            super().match(super().get_val(tmpl_dict, f'{self.dot_path}.enter.path'))[0])
-            pt_enter = super().get_val(tmpl_dict, pt_enter_path)
+            pt_enter = self.dict_demon_parade['enter']['pt'] = super().match(self.dict_demon_parade['enter']['path'])[0]
         super().left_click(pt_enter, (4, 5))
         super().capture(True, 'static/TODO/town/demon_parade/ghost_selection_screen/')  # HACK
-        pt_start_path = f'{self.dot_path}.start.pt'
-        pt_start = super().get_val(tmpl_dict, pt_start_path)
+        pt_start = self.dict_demon_parade['start']['pt']
         if not pt_start:
-            super().set_val(tmpl_dict, pt_start_path,
-                            super().match(super().get_val(tmpl_dict, f'{self.dot_path}.start.path'))[0])
-            pt_start = super().get_val(tmpl_dict, pt_start_path)
+            pt_start = self.dict_demon_parade['start']['pt'] = super().match(self.dict_demon_parade['start']['path'])[0]
         self.__choose_ghost(pt_start)  # Choose the ghost
         super().left_click(pt_start, (4, 5))
         # TODO
@@ -45,23 +39,20 @@ class BeansThrower(Matcher, Cursor):
         super().left_click(ghosts_scatter[2], (1, 2))  # The right ghost is selected by default
 
     def __get_ghosts_scatter(self, pt_start):
-        scatter_path = f'{self.dot_path}.ghosts_scatter'
-        scatter = super().get_val(tmpl_dict, scatter_path)
+        scatter = self.dict_demon_parade['ghosts_scatter']
         if not scatter:
             x, y = pt_start
-            super().set_val(tmpl_dict, scatter_path, [(x - 689, y - 92), (x - 398, y - 124), (x - 114, y - 103)])
-            scatter = super().get_val(tmpl_dict, scatter_path)
+            scatter = self.dict_demon_parade['ghosts_scatter'] = [(x - 689, y - 92), (x - 398, y - 124),
+                                                                  (x - 114, y - 103)]
         print(f'ghosts_scatter: {scatter}')
         return scatter
 
     def __invite_friends(self, index: str = ''):
         # Clicking on the '+' button
-        pt_invite_path = f'{self.dot_path}.invite.pt'
-        pt_invite = super().get_val(tmpl_dict, pt_invite_path)
+        pt_invite = self.dict_demon_parade['invite']['pt']
         if not pt_invite:
-            super().set_val(tmpl_dict, pt_invite_path,
-                            super().match(super().get_val(tmpl_dict, f'{self.dot_path}.invite.path'))[0])
-            pt_invite = super().get_val(tmpl_dict, pt_invite_path)
+            pt_invite = self.dict_demon_parade['invite']['pt'] = \
+                super().match(self.dict_demon_parade['invite']['path'])[0]
         super().left_click(pt_invite, (1, 2))
         # Invite someone from friend list
         friend_list_scatter = self.__get_friend_list_scatter()
@@ -69,14 +60,13 @@ class BeansThrower(Matcher, Cursor):
         super().left_click(friend_list_scatter[cur_index], (1, 2))
 
     def __get_friend_list_scatter(self):
-        scatter_path = f'{self.dot_path}.friend_list_scatter'
-        scatter = super().get_val(tmpl_dict, scatter_path)
+        scatter = self.dict_demon_parade['friend_list_scatter']
         if not scatter:
-            x, y = super().match(super().get_val(tmpl_dict, f'{self.dot_path}.friends.path'))[0]
-            super().set_val(tmpl_dict, scatter_path,
-                            [(x + 100, y + 64), (x + 316, y + 64), (x + 100, y + 131), (x + 316, y + 131),
-                             (x + 100, y + 199), (x + 316, y + 199), (x + 100, y + 266), (x + 316, y + 266)])
-            scatter = super().get_val(tmpl_dict, scatter_path)
+            x, y = super().match(self.dict_demon_parade['friends']['path'])[0]
+            scatter = self.dict_demon_parade['friend_list_scatter'] = [(x + 100, y + 64), (x + 316, y + 64),
+                                                                       (x + 100, y + 131), (x + 316, y + 131),
+                                                                       (x + 100, y + 199), (x + 316, y + 199),
+                                                                       (x + 100, y + 266), (x + 316, y + 266)]
         print(f'friend_list_scatter: {scatter}')
         return scatter
 

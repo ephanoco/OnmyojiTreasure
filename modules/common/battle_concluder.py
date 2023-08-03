@@ -12,7 +12,7 @@ from utils.tmpl_dict import tmpl_dict
 class BattleConcluder(Matcher):
     def __init__(self):
         super().__init__()
-        self.dot_path = 'exploration_map.common'
+        self.dict_common = tmpl_dict['exploration_map']['common']
 
     def conclude_battle(self, first_loop_delay, vic_cb, is_loop_def=True, def_cb=None):
         is_first_loop = True
@@ -23,7 +23,7 @@ class BattleConcluder(Matcher):
             else:
                 time.sleep(1)
             super().capture()
-            tmpl_victory = super().get_val(tmpl_dict, f'{self.dot_path}.victory')
+            tmpl_victory = self.dict_common['victory']
             pt_victory_list = super().match(tmpl_victory['path'], False,
                                             thresh_mul=tmpl_victory['thresh_mul'])
             if pt_victory_list:
@@ -31,7 +31,7 @@ class BattleConcluder(Matcher):
                 super().left_click(pt_victory_list[0], (4, 5))
                 vic_cb()
                 break
-            pt_defeat_list = super().match(super().get_val(tmpl_dict, f'{self.dot_path}.defeat.path'), False)
+            pt_defeat_list = super().match(self.dict_common['defeat']['path'], False)
             if pt_defeat_list:
                 if is_loop_def:
                     super().left_click(pt_defeat_list[0], (4, 5))

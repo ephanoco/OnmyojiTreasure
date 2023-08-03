@@ -14,23 +14,18 @@ class Window:
         self.hwnd: HWND = self.get_hwnd()
 
     def get_hwnd(self):
-        hwnd_list = self.get_hwnd_list()
+        hwnd_list = self.__get_hwnd_list()
         for hwnd in hwnd_list:
-            wnd_text = self.get_wnd_text(hwnd)
+            wnd_text = self.__get_wnd_text(hwnd)
             if 'MuMu模拟器' in wnd_text:
                 return hwnd
 
     @staticmethod
-    def get_wnd_text(hwnd):
+    def __get_wnd_text(hwnd):
         return win32gui.GetWindowText(hwnd)
 
     @staticmethod
-    def get_hwnd_list():
+    def __get_hwnd_list():
         hwnd_list = []
         win32gui.EnumWindows(lambda hwnd, param: param.append(hwnd), hwnd_list)
         return hwnd_list
-
-
-if __name__ == '__main__':
-    window = Window()
-    window.get_hwnd()

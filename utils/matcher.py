@@ -16,6 +16,7 @@ from utils.util import Util
 class Matcher(Capturer, Cursor):
     def __init__(self):
         super().__init__()
+        self.dict_wanted_quests = tmpl_dict['wanted_quests']
 
     def match(self, tmpl_path, capture=True, is_multiple=True, thresh_mul=0.99, thresh_sgl=0.03, is_with_colour=False,
               classification=1):
@@ -29,32 +30,26 @@ class Matcher(Capturer, Cursor):
                                    is_with_colour) if classification == 1 else self.match_features(img_rgb, tmpl_rgb)
 
     def __mission_invitation_handler(self, img_rgb, kwargs):
-        dot_path = 'wanted_quests'
-        pt_inv_list = self.match_template(img_rgb, cv.imread(super().get_val(tmpl_dict, f'{dot_path}.invitation.path')))
+        pt_inv_list = self.match_template(img_rgb, cv.imread(self.dict_wanted_quests['invitation']['path']))
         if pt_inv_list:
-            pt_gold_list = self.match_template(img_rgb, cv.imread(super().get_val(tmpl_dict, f'{dot_path}.gold.path')))
+            pt_gold_list = self.match_template(img_rgb, cv.imread(self.dict_wanted_quests['gold']['path']))
             pt_accept, pt_reject = self.__get_pt_accept_reject(pt_inv_list[0])
             if not pt_gold_list:
                 super().left_click(pt_accept, (1, 2))
             else:
                 pt_shard_list = self.match_template(img_rgb,
-                                                    cv.imread(super().get_val(tmpl_dict, f'{dot_path}.shard.path')))
+                                                    cv.imread(self.dict_wanted_quests['shard']['path']))
                 super().left_click(pt_accept if not pt_shard_list else pt_reject, (1, 2))
             return self.match(**kwargs)
 
-    @staticmethod
-    def __get_pt_accept_reject(pt_inv):
+    def __get_pt_accept_reject(self, pt_inv):
         x, y = pt_inv
-        pt_accept_path = 'wanted_quests.accept'
-        pt_accept = super().get_val(tmpl_dict, pt_accept_path)
+        pt_accept = self.dict_wanted_quests['accept']
         if not pt_accept:
-            super().set_val(tmpl_dict, pt_accept_path, (x + 255, y + 195))
-            pt_accept = super().get_val(tmpl_dict, pt_accept_path)
-        pt_reject_path = 'wanted_quests.reject'
-        pt_reject = super().get_val(tmpl_dict, pt_reject_path)
+            pt_accept = self.dict_wanted_quests['accept'] = (x + 255, y + 195)
+        pt_reject = self.dict_wanted_quests['reject']
         if not pt_reject:
-            super().set_val(tmpl_dict, pt_reject_path, (x + 254, y + 276))
-            pt_reject = super().get_val(tmpl_dict, pt_reject_path)
+            pt_reject = self.dict_wanted_quests['reject'] = (x + 254, y + 276)
         return [pt_accept, pt_reject]
 
     def match_template(self, img_rgb, tmpl_rgb, is_multiple=True, thresh_mul=0.99, thresh_sgl=0.03,
@@ -172,5 +167,6 @@ if __name__ == '__main__':
     #     False,
     #     classification=2)
     # print(f'train_kp: {train_kp}')
-    pt_list = matcher.match(util.get_path('static/templates/exploration_map/realm_raid/defeat.png'), False)
+    pt_list = matcher.match(util.get_path('static/templates/exploration_map/common/victory.png'), False,
+                            thresh_mul=0.96)
     print(f'pt_list: {pt_list}')
