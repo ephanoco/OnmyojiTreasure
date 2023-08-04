@@ -1,18 +1,18 @@
 ### Todo
 
-- [ ] Background screenshot #feat
-- [ ] Background cursor #feat
-- [ ] throw_beans: use Machine learning to apply #feat
+- [ ] Backstage operation #feat
+    - [ ] Capture
+    - [ ] Cursor
+- [ ] throw_beans #feat
 
 ### In Progress
 
-- [ ] refactor #refactor
-    - [x] Extract public functions
-    - [x] Adjust common templates
+- [ ] Refactor #refactor
+    - [x] Add BattleConcluder
+    - [x] Common templates
     - [x] tmpl_dict
-    - [ ] Add function annotation
-- [ ] challenge_sougenbi #feat
-    - [ ] Empty realm raid pass
+    - [ ] Add method comments
+- [ ] challenge_sougenbi: Empty realm raid passes #feat
 
 ### Done ✓
 
