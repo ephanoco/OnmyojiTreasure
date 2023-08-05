@@ -17,7 +17,8 @@ Python.
     * Individual Realm Raid retreats 2 by default, before running the script, please make sure to manually retreat 4
       first every week and the last realm is unraided.
 * Sougenbi Challenge
-    * Before challenging, please make sure that there are no realm raid passes. Automatic empty passes are supported,
+    * Before challenging, please make sure that there are no realm raid passes. Automatically empty passes are
+      supported,
       and two independent lineups need to be prepared in advance.
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![Python 3.6](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-3114/)
