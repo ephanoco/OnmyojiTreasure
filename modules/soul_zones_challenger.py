@@ -6,20 +6,22 @@
 import time
 
 from modules.common.battle_concluder import BattleConcluder
+from modules.realm_raider import RealmRaider
 from utils.tmpl_dict import tmpl_dict
 
 
 class SoulZonesChallenger(BattleConcluder):
     def __init__(self):
         super().__init__()
-        self.dict_soul_zones = tmpl_dict['exploration']['soul_zones']
+        self.dict_exploration = tmpl_dict['exploration']
+        self.count = 0
 
-    def challenge_sougenbi(self, vic_cb=None):
+    def challenge_sougenbi(self, is_empty=False):
         # Access Sougenbi
-        pt_challenge = self.dict_soul_zones['sougenbi']['challenge']['pt']
-        tmpl_challenge = self.dict_soul_zones['sougenbi']['challenge']
+        pt_challenge = self.dict_exploration['soul_zones']['sougenbi']['challenge']['pt']
+        tmpl_challenge = self.dict_exploration['soul_zones']['sougenbi']['challenge']
         if not pt_challenge:
-            pt_challenge = self.dict_soul_zones['sougenbi']['challenge']['pt'] = \
+            pt_challenge = self.dict_exploration['soul_zones']['sougenbi']['challenge']['pt'] = \
                 super().match(tmpl_challenge['path'],
                               thresh_mul=tmpl_challenge['thresh_mul'])[0]
         super().left_click(pt_challenge, 2)
@@ -31,10 +33,70 @@ class SoulZonesChallenger(BattleConcluder):
             return
 
         time.sleep(3)
-        super().conclude_battle(39, self.vic_cb if not vic_cb else vic_cb, False)  # first_loop_delay: 17
 
-    def vic_cb(self):
-        self.challenge_sougenbi()
+        def vic_cb():
+            if is_empty:
+                # Empty realm raid passes
+                self.count += 1
+                '''
+                150 = 30 / 20%
+                Single drop rate 20%, team drop rate 21.6%.
+                '''
+                if self.count == 150:
+                    self.__empty_passes(is_empty)
+
+            self.challenge_sougenbi(is_empty)
+
+        super().conclude_battle(39, vic_cb, False)  # first_loop_delay: 17
+
+    def __empty_passes(self, is_empty):
+        # Return to the exploration
+        pt_return = self.__get_rel_pt('challenge', 'return')
+        super().left_click(pt_return, (1, 2))
+        # Access the realm raid
+        pt_realm_raid = self.dict_exploration['realm_raid_btn']['pt']
+        tmpl_realm_raid = self.dict_exploration['realm_raid_btn']
+        if not pt_realm_raid:
+            pt_realm_raid = self.dict_exploration['realm_raid_btn']['pt'] = \
+                super().match(tmpl_realm_raid['path'],
+                              thresh_mul=tmpl_realm_raid['thresh_mul'])[0]
+        super().left_click(pt_realm_raid, (1, 2))
+
+        def ran_out_cb():
+            # Return to the exploration
+            pt_close = self.dict_exploration['realm_raid']['close']['pt']
+            if not pt_close:
+                pt_close = self.dict_exploration['realm_raid']['close']['pt'] = \
+                    super().match(self.dict_exploration['realm_raid']['close']['path'])[0]
+            super().left_click(pt_close, (1, 2))
+            # Access Sougenbi
+            pt_soul_zones_btn = self.__get_rel_pt('realm_raid_btn', 'soul_zones_btn')
+            super().left_click(pt_soul_zones_btn, (1, 2))
+            pt_sougenbi_btn = self.dict_exploration['soul_zones']['sougenbi_btn']['pt']
+            if not pt_sougenbi_btn:
+                pt_sougenbi_btn = self.dict_exploration['soul_zones']['sougenbi_btn']['pt'] = \
+                    super().match(self.dict_exploration['soul_zones']['sougenbi_btn']['path'])[0]
+            super().left_click(pt_sougenbi_btn, (1, 2))
+
+        if is_empty:
+            realm_raider = RealmRaider()
+            realm_raider.raid(True, False, ran_out_cb)
+
+    def __get_rel_pt(self, base, rel):
+        dict_base = {
+            'challenge': self.dict_exploration['soul_zones']['sougenbi']['challenge']['pt'],
+            'realm_raid_btn': self.dict_exploration['realm_raid_btn']['pt'],
+        }
+        x, y = dict_base[base]
+        dict_rel = {
+            'challenge': {
+                'return': (x - 871, y - 467),
+            },
+            'realm_raid_btn': {
+                'soul_zones_btn': (x - 84, y + 3),
+            },
+        }
+        return dict_rel[base][rel]
 
 
 if __name__ == '__main__':

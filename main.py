@@ -8,11 +8,10 @@ import sys
 
 from modules.beans_thrower import BeansThrower
 from modules.realm_raider import RealmRaider
-from modules.soul_zones_auto_challenger import SoulZonesAutoChallenger
 from modules.soul_zones_challenger import SoulZonesChallenger
 
 
-class OnmyojiTreasure(RealmRaider, BeansThrower, SoulZonesChallenger, SoulZonesAutoChallenger):
+class OnmyojiTreasure(RealmRaider, BeansThrower, SoulZonesChallenger):
     def start(self):
         if super().is_admin():
             modes = {'1': 'Realm Raid (结界突破)', '2': 'Demon Parade (百鬼夜行)', '3': 'Soul Zones (御魂)'}
@@ -32,8 +31,8 @@ class OnmyojiTreasure(RealmRaider, BeansThrower, SoulZonesChallenger, SoulZonesA
                 if soul_zone == '1':
                     pass
                 elif soul_zone == '2':
-                    is_auto = super().query_yes_no("Is automatically empty realm raid passes?")
-                    super().challenge_sougenbi() if not is_auto else super().auto_challenge_sougenbi()
+                    is_empty = super().query_yes_no("Is automatically empty realm raid passes?")
+                    super().challenge_sougenbi(is_empty)
                 elif soul_zone == '3':
                     pass
                 elif soul_zone == '4':
