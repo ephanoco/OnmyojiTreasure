@@ -12,9 +12,10 @@ from utils.tmpl_dict import tmpl_dict
 class SoulZonesChallenger(BattleConcluder):
     def __init__(self):
         super().__init__()
-        self.dict_soul_zones = tmpl_dict['exploration_map']['soul_zones']
+        self.dict_soul_zones = tmpl_dict['exploration']['soul_zones']
 
-    def challenge_sougenbi(self):
+    def challenge_sougenbi(self, vic_cb=None):
+        # Access Sougenbi
         pt_challenge = self.dict_soul_zones['sougenbi']['challenge']['pt']
         tmpl_challenge = self.dict_soul_zones['sougenbi']['challenge']
         if not pt_challenge:
@@ -22,6 +23,7 @@ class SoulZonesChallenger(BattleConcluder):
                 super().match(tmpl_challenge['path'],
                               thresh_mul=tmpl_challenge['thresh_mul'])[0]
         super().left_click(pt_challenge, 2)
+
         pt_challenge_list = super().match(tmpl_challenge['path'],
                                           thresh_mul=tmpl_challenge['thresh_mul'])
         # Scrolls ran out
@@ -29,7 +31,10 @@ class SoulZonesChallenger(BattleConcluder):
             return
 
         time.sleep(3)
-        super().conclude_battle(39, lambda: self.challenge_sougenbi, False)  # first_loop_delay: 17
+        super().conclude_battle(39, self.vic_cb if not vic_cb else vic_cb, False)  # first_loop_delay: 17
+
+    def vic_cb(self):
+        self.challenge_sougenbi()
 
 
 if __name__ == '__main__':

@@ -12,8 +12,8 @@
     - [x] Common templates
     - [x] Template dictionary
     - [ ] Add method comments
-- [ ] challenge_sougenbi: Empty realm raid passes #feat
 
 ### Done ✓
 
 - [x] Individual Realm Raid
+- [x] challenge_sougenbi: Empty realm raid passes #feat 

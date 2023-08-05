@@ -12,7 +12,7 @@ from utils.tmpl_dict import tmpl_dict
 class BattleConcluder(Matcher):
     def __init__(self):
         super().__init__()
-        self.dict_common = tmpl_dict['exploration_map']['common']
+        self.dict_common = tmpl_dict['exploration']['common']
 
     def conclude_battle(self, first_loop_delay, vic_cb, is_loop_def=True, def_cb=None):
         is_first_loop = True

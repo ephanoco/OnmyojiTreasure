@@ -167,6 +167,5 @@ if __name__ == '__main__':
     #     False,
     #     classification=2)
     # print(f'train_kp: {train_kp}')
-    pt_list = matcher.match(util.get_path('static/templates/exploration_map/common/victory.png'), False,
-                            thresh_mul=0.96)
+    pt_list = matcher.match(util.get_path('static/templates/exploration/soul_zones/sougenbi_btn.png'), False)
     print(f'pt_list: {pt_list}')

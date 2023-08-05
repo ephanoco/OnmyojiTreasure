@@ -12,14 +12,14 @@ from utils.tmpl_dict import tmpl_dict
 class RealmRaider(BattleConcluder):
     def __init__(self):
         super().__init__()
-        self.dict_realm_raid = tmpl_dict['exploration_map']['realm_raid']
+        self.dict_realm_raid = tmpl_dict['exploration']['realm_raid']
         self.guild_defeated_count = 0
 
-    def raid(self, is_individual, is_cooldown):
+    def raid(self, is_individual, is_cooldown=False, ran_out_cb=None):
         # is_individual = len(super().match(
         #     super().get_path(f'{self.rel_path}individual_active.png'), thresh_mul=0.98
         # )) != 0
-        self.__individual_raid() if is_individual else self.__guild_raid(is_cooldown)
+        self.__individual_raid(ran_out_cb=ran_out_cb) if is_individual else self.__guild_raid(is_cooldown)
 
     def __guild_raid(self, is_cooldown, index: str = ''):
         # Choose the realm
@@ -127,7 +127,7 @@ class RealmRaider(BattleConcluder):
         print(f'scatter: {scatter}')
         return scatter
 
-    def __individual_raid(self, index: str = ''):
+    def __individual_raid(self, index: str = '', ran_out_cb=None):
         # Choose the realm
         scatter = self.__get_scatter('individual')
         cur_index = 0 if not index else int(index)
@@ -150,6 +150,8 @@ class RealmRaider(BattleConcluder):
             pt_raid_list = super().match(tmpl_raid['path'], thresh_mul=tmpl_raid['thresh_mul'])
             # Passes ran out
             if pt_raid_list:
+                if ran_out_cb:
+                    ran_out_cb()
                 return
 
             time.sleep(3)
@@ -231,4 +233,4 @@ class RealmRaider(BattleConcluder):
 
 if __name__ == '__main__':
     realm_raider = RealmRaider()
-    realm_raider.raid(False, False)
+    realm_raider.raid(False)
