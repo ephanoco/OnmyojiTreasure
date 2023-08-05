@@ -3,17 +3,17 @@
 - [ ] Backstage operation #feat
     - [ ] Capture
     - [ ] Cursor
-- [ ] throw_beans #feat
+- [ ] Demon Parade #feat
 
 ### In Progress
 
 - [ ] Refactor #refactor
-    - [x] Add BattleConcluder
+    - [x] Add Battle Concluder
     - [x] Common templates
-    - [x] tmpl_dict
+    - [x] Template dictionary
     - [ ] Add method comments
 - [ ] challenge_sougenbi: Empty realm raid passes #feat
 
 ### Done ✓
 
-- [x] __individual_raid
+- [x] Individual Realm Raid
