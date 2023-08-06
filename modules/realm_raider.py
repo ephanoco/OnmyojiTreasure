@@ -43,7 +43,7 @@ class RealmRaider(BattleConcluder):
             if not pt_raid_list[0]:
                 time.sleep(1800)
                 super().left_click(scatter[cur_index + 1], (1, 2))
-                return self.__guild_raid(True)
+                return self.__guild_raid(True, str(cur_index))
         super().left_click(pt_raid_list[0], 2)  # Raid
         # The realm has been raided
         pt_raid_list = super().match(tmpl_raid['path'],
