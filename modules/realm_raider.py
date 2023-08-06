@@ -42,6 +42,7 @@ class RealmRaider(BattleConcluder):
             # Cooldown
             if not pt_raid_list[0]:
                 time.sleep(1800)
+                super().left_click(scatter[cur_index + 1], (1, 2))
                 return self.__guild_raid(True)
         super().left_click(pt_raid_list[0], 2)  # Raid
         # The realm has been raided
@@ -233,4 +234,4 @@ class RealmRaider(BattleConcluder):
 
 if __name__ == '__main__':
     realm_raider = RealmRaider()
-    realm_raider.raid(False)
+    realm_raider.raid(False, True)
