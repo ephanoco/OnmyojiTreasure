@@ -205,9 +205,10 @@ class RealmRaider(BattleConcluder):
 
     def __get_pt_battle_buffs(self):
         pt_battle_buffs = self.dict_realm_raid['individual']['battle_buffs']['pt']
+        tmpl_battle_buffs = self.dict_realm_raid['individual']['battle_buffs']
         if not pt_battle_buffs:
             pt_battle_buffs = self.dict_realm_raid['individual']['battle_buffs']['pt'] = \
-                super().match(self.dict_realm_raid['individual']['battle_buffs']['path'])[0]
+                super().match(tmpl_battle_buffs['path'], thresh_mul=tmpl_battle_buffs['thresh_mul'])[0]
         print(f'pt_battle_buffs: {pt_battle_buffs}')
         return pt_battle_buffs
 
