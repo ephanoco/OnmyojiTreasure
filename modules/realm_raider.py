@@ -163,14 +163,14 @@ class RealmRaider(BattleConcluder):
             if cur_index == 2 or cur_index == 5 or cur_index == 8:
                 pt_vic = self.__get_rel_pt('realm_buffs', 'victory')
                 time.sleep(1)
-                super().left_click(pt_vic, (1, 2))
+                super(RealmRaider, self).left_click(pt_vic, (1, 2))  # XXX
 
             if cur_index < 8:
                 self.__individual_raid(str(cur_index + 1))
             else:
                 # Lock the lineup
                 pt_lock = self.__get_rel_pt('realm_buffs', 'lock')
-                super().left_click(pt_lock, (1, 2))
+                super(RealmRaider, self).left_click(pt_lock, (1, 2))
 
                 self.__individual_raid()
 
@@ -178,7 +178,7 @@ class RealmRaider(BattleConcluder):
 
     def __retreat_two(self, scatter):
         # Unlock the lineup
-        pt_lock = self.__get_rel_pt('realm_buffs', '.lock')
+        pt_lock = self.__get_rel_pt('realm_buffs', 'lock')
         super().left_click(pt_lock, (1, 2))
         super().left_click(scatter[-1], (1, 2))  # Choose the realm
         tmpl_raid = self.dict_realm_raid['raid']
@@ -234,4 +234,4 @@ class RealmRaider(BattleConcluder):
 
 if __name__ == '__main__':
     realm_raider = RealmRaider()
-    realm_raider.raid(False, True)
+    realm_raider.raid(True)
