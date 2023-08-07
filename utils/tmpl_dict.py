@@ -15,6 +15,7 @@ tmpl_dict = {
                 'battle_buffs': {
                     'pt': (),
                     'path': util.get_path(f'{tmpl_root}exploration/realm_raid/battle_buffs.png'),
+                    'thresh_mul': 0.9,
                 },
             },
             'guild': {
