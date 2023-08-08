@@ -235,4 +235,4 @@ class RealmRaider(BattleConcluder):
 
 if __name__ == '__main__':
     realm_raider = RealmRaider()
-    realm_raider.raid(True)
+    realm_raider.raid(False)

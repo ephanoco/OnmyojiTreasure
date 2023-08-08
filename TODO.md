@@ -11,6 +11,7 @@
     - [x] Add Battle Concluder
     - [x] Common templates
     - [x] Template dictionary
+    - [x] Refactor README.md
     - [ ] Add method comments
 
 ### Done ✓
