@@ -17,6 +17,11 @@ class SoulZonesChallenger(BattleConcluder):
         self.count = 0
 
     def challenge_sougenbi(self, is_empty=False):
+        """
+
+        :param is_empty:Automatically empty realm raid passes.
+        :return:
+        """
         # Access Sougenbi
         pt_challenge = self.dict_exploration['soul_zones']['sougenbi']['challenge']['pt']
         tmpl_challenge = self.dict_exploration['soul_zones']['sougenbi']['challenge']
@@ -50,6 +55,11 @@ class SoulZonesChallenger(BattleConcluder):
         super().conclude_battle(39, vic_cb, False)  # first_loop_delay: 17
 
     def __empty_passes(self, is_empty):
+        """
+        Empty realm raid passes.
+        :param is_empty: Automatically empty.
+        :return:
+        """
         # Return to the exploration
         pt_return = self.__get_rel_pt('challenge', 'return')
         super().left_click(pt_return, (1, 2))
@@ -82,12 +92,18 @@ class SoulZonesChallenger(BattleConcluder):
             realm_raider = RealmRaider()
             realm_raider.raid(True, False, ran_out_cb)
 
-    def __get_rel_pt(self, base, rel):
-        dict_base = {
+    def __get_rel_pt(self, ref, rel):
+        """
+        Compute relative coordinates based on reference coordinates.
+        :param ref:The key of the reference coordinates.
+        :param rel:The key of the relative coordinates.
+        :return:Relative coordinates
+        """
+        dict_ref = {
             'challenge': self.dict_exploration['soul_zones']['sougenbi']['challenge']['pt'],
             'realm_raid_btn': self.dict_exploration['realm_raid_btn']['pt'],
         }
-        x, y = dict_base[base]
+        x, y = dict_ref[ref]
         dict_rel = {
             'challenge': {
                 'return': (x - 871, y - 467),
@@ -96,7 +112,7 @@ class SoulZonesChallenger(BattleConcluder):
                 'soul_zones_btn': (x - 84, y + 3),
             },
         }
-        return dict_rel[base][rel]
+        return dict_rel[ref][rel]
 
 
 if __name__ == '__main__':

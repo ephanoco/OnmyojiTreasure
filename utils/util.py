@@ -11,12 +11,21 @@ import sys
 class Util:
     @staticmethod
     def get_path(path):
+        """
+        Get the absolute path of the file.
+        :param path:File relative path
+        :return:File absolute path
+        """
         cur_path = os.path.dirname(__file__)
         base_dir = os.path.dirname(cur_path)
         return os.path.join(base_dir, os.path.normcase(path))
 
     @staticmethod
     def is_admin():
+        """
+        Determine if obtained admin rights.
+        :return:
+        """
         try:
             return ctypes.windll.shell32.IsUserAnAdmin()
         except:

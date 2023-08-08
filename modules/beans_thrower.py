@@ -44,7 +44,7 @@ class BeansThrower(Matcher, Cursor):
             x, y = pt_start
             scatter = self.dict_demon_parade['ghosts_scatter'] = [(x - 689, y - 92), (x - 398, y - 124),
                                                                   (x - 114, y - 103)]
-        print(f'ghosts_scatter: {scatter}')
+        print(f'scatter[ghosts]: {scatter}')
         return scatter
 
     def __invite_friends(self, index: str = ''):
@@ -67,7 +67,7 @@ class BeansThrower(Matcher, Cursor):
                                                                        (x + 100, y + 131), (x + 316, y + 131),
                                                                        (x + 100, y + 199), (x + 316, y + 199),
                                                                        (x + 100, y + 266), (x + 316, y + 266)]
-        print(f'friend_list_scatter: {scatter}')
+        print(f'scatter[friend_list]: {scatter}')
         return scatter
 
 

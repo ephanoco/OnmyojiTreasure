@@ -16,12 +16,25 @@ class RealmRaider(BattleConcluder):
         self.guild_defeated_count = 0
 
     def raid(self, is_individual, is_cooldown=False, ran_out_cb=None):
+        """
+
+        :param is_individual:
+        :param is_cooldown:Guild realm raid cooldown
+        :param ran_out_cb:Individual realm raid passes ran out.
+        :return:
+        """
         # is_individual = len(super().match(
         #     super().get_path(f'{self.rel_path}individual_active.png'), thresh_mul=0.98
         # )) != 0
         self.__individual_raid(ran_out_cb=ran_out_cb) if is_individual else self.__guild_raid(is_cooldown)
 
     def __guild_raid(self, is_cooldown, index: str = ''):
+        """
+
+        :param is_cooldown: Realm raid cooldown
+        :param index:
+        :return:
+        """
         # Choose the realm
         scatter = self.__get_scatter('guild')
         cur_index = self.guild_defeated_count if not index else int(index)
@@ -66,6 +79,12 @@ class RealmRaider(BattleConcluder):
         super().conclude_battle(10, __vic_cb, def_cb=__def_cb)
 
     def __mark_ghost(self, pt=(), times=0):
+        """
+
+        :param pt:Shikigami coordinates
+        :param times:Maximum mark times
+        :return:
+        """
         if times == 10:
             return
         pt_ghost = self.__get_pt_ghost() if not pt else pt
@@ -87,10 +106,18 @@ class RealmRaider(BattleConcluder):
             self.__mark_ghost(pt_ghost, times=times + 1)
 
     def __get_pt_ghost(self):
+        """
+        Get shikigami coordinates.
+        :return:shikigami coordinates
+        """
         x, y = self.__get_pt_nickname()
         return x + 6, y + 74
 
     def __get_pt_nickname(self):
+        """
+        Get Shikigami nickname coordinates.
+        :return:Shikigami nickname coordinates
+        """
         super().capture()
         tmpl_nickname = self.dict_realm_raid['nickname']
         pt_nickname_light_list = super().match(tmpl_nickname['path'], False,
@@ -108,6 +135,11 @@ class RealmRaider(BattleConcluder):
         return self.__get_pt_nickname()
 
     def __get_scatter(self, mode):
+        """
+
+        :param mode: Guild or individual.
+        :return:
+        """
         scatter = self.dict_realm_raid[mode]['scatter']
         if not scatter:
             pt_realm_buffs = self.dict_realm_raid['realm_buffs']['pt']  # (230, 238)
@@ -129,6 +161,12 @@ class RealmRaider(BattleConcluder):
         return scatter
 
     def __individual_raid(self, index: str = '', ran_out_cb=None):
+        """
+
+        :param index:
+        :param ran_out_cb:Realm raid passes ran out.
+        :return:
+        """
         # Choose the realm
         scatter = self.__get_scatter('individual')
         cur_index = 0 if not index else int(index)
@@ -191,7 +229,7 @@ class RealmRaider(BattleConcluder):
             return
 
         time.sleep(3)
-        self.__get_pt_battle_buffs()  # Get base pt
+        self.__get_pt_battle_buffs()  # Get ref pt
         pt_return = self.__get_rel_pt('battle_buffs', 'return')
         pt_confirm = self.__get_rel_pt('battle_buffs', 'confirm')
         pt_retreat = self.__get_rel_pt('battle_buffs', 'retreat')
@@ -212,12 +250,18 @@ class RealmRaider(BattleConcluder):
         print(f'pt_battle_buffs: {pt_battle_buffs}')
         return pt_battle_buffs
 
-    def __get_rel_pt(self, base, rel):
-        dict_base = {
+    def __get_rel_pt(self, ref, rel):
+        """
+        Compute relative coordinates based on reference coordinates.
+        :param ref:The key of the reference coordinates.
+        :param rel:The key of the relative coordinates.
+        :return:Relative coordinates
+        """
+        dict_ref = {
             'realm_buffs': self.dict_realm_raid['realm_buffs']['pt'],
             'battle_buffs': self.dict_realm_raid['individual']['battle_buffs']['pt'],
         }
-        x, y = dict_base[base]
+        x, y = dict_ref[ref]
         dict_rel = {
             'realm_buffs': {
                 'lock': (x + 609, y + 333),
@@ -230,7 +274,7 @@ class RealmRaider(BattleConcluder):
                 'prepare': (x + 818, y - 65),
             },
         }
-        return dict_rel[base][rel]
+        return dict_rel[ref][rel]
 
 
 if __name__ == '__main__':

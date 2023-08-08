@@ -13,6 +13,11 @@ import win32con
 class Cursor:
     @staticmethod
     def __set_cursor_pos(pt):
+        """
+        Move the cursor.
+        :param pt:
+        :return:
+        """
         x, y = pt
         win32api.SetCursorPos((x, y))
 
@@ -23,6 +28,12 @@ class Cursor:
         return x + offset_x, y + offset_y
 
     def left_click(self, pt, delay: int | float | tuple = None):
+        """
+
+        :param pt:
+        :param delay:delay after click
+        :return:
+        """
         offset_pt = self.__get_offset_pt(pt)
         self.__set_cursor_pos(offset_pt)
         time.sleep(0.1)

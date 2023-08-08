@@ -15,6 +15,14 @@ class BattleConcluder(Matcher):
         self.dict_common = tmpl_dict['exploration']['common']
 
     def conclude_battle(self, first_loop_delay, vic_cb, is_loop_def=True, def_cb=None):
+        """
+
+        :param first_loop_delay:Minimum battle duration
+        :param vic_cb:
+        :param is_loop_def:Continue after defeat.
+        :param def_cb:
+        :return:
+        """
         is_first_loop = True
         while True:
             if is_first_loop:

@@ -19,6 +19,12 @@ class Capturer(Window, Util):
         super().__init__()
 
     def capture(self, is_with_timestamp=False, storage_path=''):
+        """
+
+        :param is_with_timestamp: Filename contains timestamp.
+        :param storage_path:
+        :return:
+        """
         if not self.hwnd:
             sys.exit()
         bitmap = win32ui.CreateBitmap()

@@ -20,6 +20,17 @@ class Matcher(Capturer, Cursor):
 
     def match(self, tmpl_path, capture=True, is_multiple=True, thresh_mul=0.99, thresh_sgl=0.03, is_with_colour=False,
               classification=1):
+        """
+        Searching and finding the location of a template image in a larger image.
+        :param tmpl_path:
+        :param capture:
+        :param is_multiple:Template Matching with Multiple Objects.
+        :param thresh_mul:Threshold
+        :param thresh_sgl:min_val or max_val
+        :param is_with_colour:Template matching with colour.
+        :param classification:1 template matching 2 features matching
+        :return:Center coordinates
+        """
         kwargs = locals()
         if capture:
             super().capture()
@@ -30,6 +41,12 @@ class Matcher(Capturer, Cursor):
                                    is_with_colour) if classification == 1 else self.match_features(img_rgb, tmpl_rgb)
 
     def __mission_invitation_handler(self, img_rgb, kwargs):
+        """
+
+        :param img_rgb:Input image
+        :param kwargs:The input parameters of the match method
+        :return:
+        """
         pt_inv_list = self.match_template(img_rgb, cv.imread(self.dict_wanted_quests['invitation']['path']))
         if pt_inv_list:
             pt_gold_list = self.match_template(img_rgb, cv.imread(self.dict_wanted_quests['gold']['path']))
@@ -54,6 +71,16 @@ class Matcher(Capturer, Cursor):
 
     def match_template(self, img_rgb, tmpl_rgb, is_multiple=True, thresh_mul=0.99, thresh_sgl=0.03,
                        is_with_colour=False):
+        """
+
+        :param img_rgb:Input image
+        :param tmpl_rgb:Template image.
+        :param is_multiple:Template Matching with Multiple Objects.
+        :param thresh_mul:Threshold
+        :param thresh_sgl:min_val or max_val
+        :param is_with_colour:Template matching with colour.
+        :return:Center coordinates
+        """
         res = self.__get_res(is_with_colour, img_rgb, is_multiple, tmpl_rgb)
         w, h = tmpl_rgb.shape[1::-1]  # = tmpl_gray.shape[::-1]
         if is_multiple:
