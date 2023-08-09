@@ -12,6 +12,6 @@
     - [x] Add Battle Concluder
     - [x] Common templates
     - [x] Template dictionary
-    - [x] README.md
+    - [x] README
     - [x] Add method comments
 - [x] Backstage cursor #feat
