@@ -46,7 +46,7 @@ After obtaining admin rights, the following will be printed:
 
 ![example](https://raw.githubusercontent.com/ephanoco/onmyoji_treasure/master/blob/example.png)
 
-Place the cursor in the window as prompted.After the countdown ends, the window handle and name will be printed:
+Place the cursor in the window as prompted. After the countdown ends, the window handle and name will be printed:
 
 ![example_02](https://raw.githubusercontent.com/ephanoco/onmyoji_treasure/master/blob/example_02.png)
 
