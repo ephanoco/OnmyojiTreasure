@@ -19,7 +19,7 @@ class Matcher(Capturer, Cursor):
         self.dict_wanted_quests = tmpl_dict['wanted_quests']
 
     def match(self, tmpl_path, capture=True, is_multiple=True, thresh_mul=0.99, thresh_sgl=0.03, is_with_colour=False,
-              classification=1):
+              classif=1):
         """
         Searching and finding the location of a template image in a larger image.
         :param tmpl_path:
@@ -28,7 +28,7 @@ class Matcher(Capturer, Cursor):
         :param thresh_mul:Threshold
         :param thresh_sgl:min_val or max_val
         :param is_with_colour:Template matching with colour.
-        :param classification:1 template matching 2 features matching
+        :param classif:1 template matching 2 features matching
         :return:Center coordinates
         """
         kwargs = locals()
@@ -38,7 +38,7 @@ class Matcher(Capturer, Cursor):
         self.__mission_invitation_handler(img_rgb, kwargs)
         tmpl_rgb = cv.imread(tmpl_path)
         return self.match_template(img_rgb, tmpl_rgb, is_multiple, thresh_mul, thresh_sgl,
-                                   is_with_colour) if classification == 1 else self.match_features(img_rgb, tmpl_rgb)
+                                   is_with_colour) if classif == 1 else self.match_features(img_rgb, tmpl_rgb)
 
     def __mission_invitation_handler(self, img_rgb, kwargs):
         """
@@ -60,13 +60,13 @@ class Matcher(Capturer, Cursor):
             return self.match(**kwargs)
 
     def __get_pt_accept_reject(self, pt_inv):
-        x, y = pt_inv
+        cx, cy = pt_inv
         pt_accept = self.dict_wanted_quests['accept']
         if not pt_accept:
-            pt_accept = self.dict_wanted_quests['accept'] = (x + 255, y + 195)
+            pt_accept = self.dict_wanted_quests['accept'] = (cx + 255, cy + 195)
         pt_reject = self.dict_wanted_quests['reject']
         if not pt_reject:
-            pt_reject = self.dict_wanted_quests['reject'] = (x + 254, y + 276)
+            pt_reject = self.dict_wanted_quests['reject'] = (cx + 254, cy + 276)
         return [pt_accept, pt_reject]
 
     def match_template(self, img_rgb, tmpl_rgb, is_multiple=True, thresh_mul=0.99, thresh_sgl=0.03,
@@ -124,8 +124,8 @@ class Matcher(Capturer, Cursor):
         return res
 
     def __get_converted_pt(self, pt):
-        x, y = pt
-        return win32gui.ClientToScreen(self.hwnd, (int(x), int(y)))
+        cx, cy = pt
+        return win32gui.ClientToScreen(self.hwnd, (int(cx), int(cy)))
 
     def match_features(self, img_rgb, tmpl_rgb):
         # Find the key points and descriptors with SIFT
@@ -157,11 +157,11 @@ class Matcher(Capturer, Cursor):
         return good_match_train
 
     def __get_good_match_train(self, good_matches_train):
-        x, y = (0, 0)
+        cx, cy = (0, 0)
         for i in range(len(good_matches_train)):
-            x += good_matches_train[i][0]
-            y += good_matches_train[i][1]
-        return self.__get_converted_pt((x / len(good_matches_train), y / len(good_matches_train)))
+            cx += good_matches_train[i][0]
+            cy += good_matches_train[i][1]
+        return self.__get_converted_pt((cx / len(good_matches_train), cy / len(good_matches_train)))
 
     @staticmethod
     def __flann_match(query_des, train_des):
@@ -187,12 +187,12 @@ if __name__ == '__main__':
     #     util.get_path(
     #         'static/templates/town/demon_parade/ghosts_to_be_selected/special_special_super_rare/suzuhiko_hime.png'),
     #     False,
-    #     classification=2)
+    #     classif=2)
     # train_kp = matcher.match(
     #     util.get_path(
     #         'static/templates/town/demon_parade/ghosts_to_be_selected/super_rare/doumeki_03.png'),
     #     False,
-    #     classification=2)
+    #     classif=2)
     # print(f'train_kp: {train_kp}')
     pt_list = matcher.match(util.get_path('static/templates/exploration/soul_zones/sougenbi_btn.png'), False)
     print(f'pt_list: {pt_list}')

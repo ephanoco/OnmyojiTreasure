@@ -103,13 +103,13 @@ class SoulZonesChallenger(BattleConcluder):
             'challenge': self.dict_exploration['soul_zones']['sougenbi']['challenge']['pt'],
             'realm_raid_btn': self.dict_exploration['realm_raid_btn']['pt'],
         }
-        x, y = dict_ref[ref]
+        cx, cy = dict_ref[ref]
         dict_rel = {
             'challenge': {
-                'return': (x - 871, y - 467),
+                'return': (cx - 871, cy - 467),
             },
             'realm_raid_btn': {
-                'soul_zones_btn': (x - 84, y + 3),
+                'soul_zones_btn': (cx - 84, cy + 3),
             },
         }
         return dict_rel[ref][rel]

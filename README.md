@@ -35,16 +35,22 @@ pip install -r requirements.txt
 
 Before running the script:
 
-* Set emulator resolution to **1024 x 576**, and set it to the top.
+* Set emulator resolution to **1024 x 576**, non-minimizable.
 * Lock the lineup.
 
 ```bash
 python main.py
 ```
 
-After obtaining admin rights, the following will be output:
+After obtaining admin rights, the following will be printed:
 
 ![example](https://raw.githubusercontent.com/ephanoco/onmyoji_treasure/master/blob/example.png)
+
+Place the cursor in the window as prompted.After the countdown ends, the window handle and name will be printed:
+
+![example_02](https://raw.githubusercontent.com/ephanoco/onmyoji_treasure/master/blob/example_02.png)
+
+After confirming that the window is correct, select the mode.
 
 ## Support
 

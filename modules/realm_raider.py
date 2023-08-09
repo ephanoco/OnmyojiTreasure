@@ -110,8 +110,8 @@ class RealmRaider(BattleConcluder):
         Get shikigami coordinates.
         :return:shikigami coordinates
         """
-        x, y = self.__get_pt_nickname()
-        return x + 6, y + 74
+        cx, cy = self.__get_pt_nickname()
+        return cx + 6, cy + 74
 
     def __get_pt_nickname(self):
         """
@@ -148,15 +148,15 @@ class RealmRaider(BattleConcluder):
                 pt_realm_buffs = self.dict_realm_raid['realm_buffs']['pt'] = super().match(tmpl_buffs['path'],
                                                                                            thresh_mul=tmpl_buffs[
                                                                                                'thresh_mul'])[0]
-            x, y = pt_realm_buffs
-            scatter = self.dict_realm_raid[mode]['scatter'] = [(x + 285, y - 20), (x + 551, y - 20),
-                                                               (x + 816, y - 20), (x + 285, y + 88),
-                                                               (x + 551, y + 88), (x + 816, y + 88),
-                                                               (x + 285, y + 196), (x + 551, y + 196),
-                                                               (x + 816, y + 196)] if mode == 'individual' else [
-                (x + 437, y + 34), (x + 707, y + 34), (x + 437, y + 142), (x + 707, y + 142),
-                (x + 437, y + 250),
-                (x + 707, y + 250), (x + 437, y + 299), (x + 707, y + 299)]
+            cx, cy = pt_realm_buffs
+            scatter = self.dict_realm_raid[mode]['scatter'] = [(cx + 285, cy - 20), (cx + 551, cy - 20),
+                                                               (cx + 816, cy - 20), (cx + 285, cy + 88),
+                                                               (cx + 551, cy + 88), (cx + 816, cy + 88),
+                                                               (cx + 285, cy + 196), (cx + 551, cy + 196),
+                                                               (cx + 816, cy + 196)] if mode == 'individual' else [
+                (cx + 437, cy + 34), (cx + 707, cy + 34), (cx + 437, cy + 142), (cx + 707, cy + 142),
+                (cx + 437, cy + 250),
+                (cx + 707, cy + 250), (cx + 437, cy + 299), (cx + 707, cy + 299)]
         print(f'scatter: {scatter}')
         return scatter
 
@@ -261,17 +261,17 @@ class RealmRaider(BattleConcluder):
             'realm_buffs': self.dict_realm_raid['realm_buffs']['pt'],
             'battle_buffs': self.dict_realm_raid['individual']['battle_buffs']['pt'],
         }
-        x, y = dict_ref[ref]
+        cx, cy = dict_ref[ref]
         dict_rel = {
             'realm_buffs': {
-                'lock': (x + 609, y + 333),
-                'victory': (x + 451, y + 292),
+                'lock': (cx + 609, cy + 333),
+                'victory': (cx + 451, cy + 292),
             },
             'battle_buffs': {
-                'return': (x - 78, y - 509),
-                'confirm': (x + 487, y - 197),
-                'retreat': (x + 565, y - 86),
-                'prepare': (x + 818, y - 65),
+                'return': (cx - 78, cy - 509),
+                'confirm': (cx + 487, cy - 197),
+                'retreat': (cx + 565, cy - 86),
+                'prepare': (cx + 818, cy - 65),
             },
         }
         return dict_rel[ref][rel]
@@ -279,4 +279,4 @@ class RealmRaider(BattleConcluder):
 
 if __name__ == '__main__':
     realm_raider = RealmRaider()
-    realm_raider.raid(False)
+    realm_raider.raid(True)

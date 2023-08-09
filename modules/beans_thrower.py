@@ -22,7 +22,7 @@ class BeansThrower(Matcher, Cursor):
         if not pt_enter:
             pt_enter = self.dict_demon_parade['enter']['pt'] = super().match(self.dict_demon_parade['enter']['path'])[0]
         super().left_click(pt_enter, (4, 5))
-        super().capture(True, 'static/TODO/town/demon_parade/ghost_selection_screen/')  # HACK
+        # super().capture(True, 'static/TODO/town/demon_parade/ghost_selection_screen/')  # HACK
         pt_start = self.dict_demon_parade['start']['pt']
         if not pt_start:
             pt_start = self.dict_demon_parade['start']['pt'] = super().match(self.dict_demon_parade['start']['path'])[0]
@@ -32,7 +32,7 @@ class BeansThrower(Matcher, Cursor):
 
         while True:
             time.sleep(1)
-            super().capture(True, 'static/TODO/town/demon_parade/ghosts/')  # HACK
+            # super().capture(True, 'static/TODO/town/demon_parade/ghosts/')  # HACK
 
     def __choose_ghost(self, pt_start):
         ghosts_scatter = self.__get_ghosts_scatter(pt_start)
@@ -41,9 +41,9 @@ class BeansThrower(Matcher, Cursor):
     def __get_ghosts_scatter(self, pt_start):
         scatter = self.dict_demon_parade['ghosts_scatter']
         if not scatter:
-            x, y = pt_start
-            scatter = self.dict_demon_parade['ghosts_scatter'] = [(x - 689, y - 92), (x - 398, y - 124),
-                                                                  (x - 114, y - 103)]
+            cx, cy = pt_start
+            scatter = self.dict_demon_parade['ghosts_scatter'] = [(cx - 689, cy - 92), (cx - 398, cy - 124),
+                                                                  (cx - 114, cy - 103)]
         print(f'scatter[ghosts]: {scatter}')
         return scatter
 
@@ -62,11 +62,11 @@ class BeansThrower(Matcher, Cursor):
     def __get_friend_list_scatter(self):
         scatter = self.dict_demon_parade['friend_list_scatter']
         if not scatter:
-            x, y = super().match(self.dict_demon_parade['friends']['path'])[0]
-            scatter = self.dict_demon_parade['friend_list_scatter'] = [(x + 100, y + 64), (x + 316, y + 64),
-                                                                       (x + 100, y + 131), (x + 316, y + 131),
-                                                                       (x + 100, y + 199), (x + 316, y + 199),
-                                                                       (x + 100, y + 266), (x + 316, y + 266)]
+            cx, cy = super().match(self.dict_demon_parade['friends']['path'])[0]
+            scatter = self.dict_demon_parade['friend_list_scatter'] = [(cx + 100, cy + 64), (cx + 316, cy + 64),
+                                                                       (cx + 100, cy + 131), (cx + 316, cy + 131),
+                                                                       (cx + 100, cy + 199), (cx + 316, cy + 199),
+                                                                       (cx + 100, cy + 266), (cx + 316, cy + 266)]
         print(f'scatter[friend_list]: {scatter}')
         return scatter
 

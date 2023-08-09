@@ -42,9 +42,8 @@ class Capturer(Window, Util):
         mem_dc.BitBlt((0, 0), (cx, cy), hdc, (0, 0), win32con.SRCCOPY)
 
         # Save the screenshot
-        bitmap.SaveBitmapFile(mem_dc,
-                              super().get_path('static/screenshot.png') if not is_with_timestamp else super().get_path(
-                                  f'{storage_path}screenshot_{time.time()}.png'))
+        bitmap.SaveBitmapFile(mem_dc, super().get_path(
+            'static/screenshot.png' if not is_with_timestamp else f'{storage_path}screenshot_{time.time()}.png'))
         # Release memory
         win32gui.DeleteObject(bitmap.GetHandle())
         hdc.DeleteDC()

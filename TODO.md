@@ -1,12 +1,8 @@
 ### Todo
 
-- [ ] Demon Parade #feat
-
 ### In Progress
 
-- [ ] Backstage operation #feat
-    - [ ] Capture
-    - [ ] Cursor
+- [ ] Demon Parade #feat
 
 ### Done ✓
 
@@ -18,3 +14,4 @@
     - [x] Template dictionary
     - [x] README.md
     - [x] Add method comments
+- [x] Backstage cursor #feat

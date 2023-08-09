@@ -3,9 +3,9 @@
 # @Time    : 2023/7/14 17:02
 # @Author  : Samuel
 # @File    : util.py
-import ctypes
 import os.path
 import sys
+import time
 
 
 class Util:
@@ -19,17 +19,6 @@ class Util:
         cur_path = os.path.dirname(__file__)
         base_dir = os.path.dirname(cur_path)
         return os.path.join(base_dir, os.path.normcase(path))
-
-    @staticmethod
-    def is_admin():
-        """
-        Determine if obtained admin rights.
-        :return:
-        """
-        try:
-            return ctypes.windll.shell32.IsUserAnAdmin()
-        except:
-            return False
 
     @staticmethod
     def get_converted_pt_list(pt_list):
@@ -76,3 +65,22 @@ class Util:
                 return valid[choice]
             else:
                 sys.stdout.write("Please respond with 'yes' or 'no' " "(or 'y' or 'n').\n")
+
+    @staticmethod
+    def countdown(t):
+        """
+
+        :param t:Time in seconds
+        :return:
+        """
+        while t:
+            mins, secs = divmod(t, 60)
+            timer = '{:02d}:{:02d}'.format(mins, secs)
+            print(timer, end="\r")
+            time.sleep(1)
+            t -= 1
+
+
+if __name__ == '__main__':
+    util = Util()
+    util.countdown(10)
