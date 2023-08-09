@@ -30,24 +30,28 @@ class Cursor(Window):
         offset_y = offset_x = random.randint(-5, 5)  # random.randint(0, 10)
         return cx + offset_x, cy + offset_y
 
-    def left_click(self, pt, delay: int | float | tuple = None):
+    def left_click(self, pt, delay: int | float | tuple = None, mode='backstage'):
         """
 
-        :param pt:
-        :param delay:delay after click
+        :param pt:Screen coordinates
+        :param delay:Delay after click
+        :param mode:Frontstage or backstage
         :return:
         """
-        offset_pt = self.__get_offset_pt(pt)
-        # Frontstage
-        # self.__set_cursor_pos(offset_pt)
-        # time.sleep(0.1)
-        # cx, cy = offset_pt
-        # win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN | win32con.MOUSEEVENTF_LEFTUP, cx, cy)
-        # Backstage
-        cx, cy = win32gui.ScreenToClient(self.hwnd, offset_pt)
-        lParam = win32api.MAKELONG(cx, cy)
-        win32api.SendMessage(self.hwnd, win32con.WM_LBUTTONDOWN, win32con.MK_LBUTTON, lParam)
-        win32api.SendMessage(self.hwnd, win32con.WM_LBUTTONUP, win32con.MK_LBUTTON, lParam)
+        if mode == 'frontstage':
+            offset_pt = self.__get_offset_pt(pt)
+            self.__set_cursor_pos(offset_pt)
+            time.sleep(0.1)
+            cx, cy = offset_pt
+            win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN | win32con.MOUSEEVENTF_LEFTUP, cx, cy)
+        else:
+            client_pt = win32gui.ScreenToClient(self.hwnd, pt)
+            offset_pt = self.__get_offset_pt(client_pt)
+            cx, cy = offset_pt
+            lParam = win32api.MAKELONG(cx, cy)
+            win32api.SendMessage(self.hwnd, win32con.WM_LBUTTONDOWN, win32con.MK_LBUTTON, lParam)
+            win32api.SendMessage(self.hwnd, win32con.WM_LBUTTONUP, win32con.MK_LBUTTON, lParam)
+        # Delay
         if isinstance(delay, int | float):
             time.sleep(delay)
         elif isinstance(delay, tuple):
@@ -58,4 +62,4 @@ class Cursor(Window):
 
 if __name__ == '__main__':
     cursor = Cursor()
-    cursor.left_click((1046, 327))
+    cursor.left_click((839, 572))
