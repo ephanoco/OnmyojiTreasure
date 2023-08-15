@@ -22,17 +22,15 @@ class BeansThrower(Matcher, Cursor):
         if not pt_enter:
             pt_enter = self.dict_demon_parade['enter']['pt'] = super().match(self.dict_demon_parade['enter']['path'])[0]
         super().left_click(pt_enter, (4, 5))
-        # super().capture(True, 'static/TODO/town/demon_parade/ghost_selection_screen/')  # HACK
         pt_start = self.dict_demon_parade['start']['pt']
         if not pt_start:
             pt_start = self.dict_demon_parade['start']['pt'] = super().match(self.dict_demon_parade['start']['path'])[0]
         self.__choose_ghost(pt_start)  # Choose the ghost
         super().left_click(pt_start, (4, 5))
         # TODO
-
         while True:
             time.sleep(1)
-            # super().capture(True, 'static/TODO/town/demon_parade/ghosts/')  # HACK
+            super().capture(True, 'static/temp/town/demon_parade/ghosts/')  # HACK
 
     def __choose_ghost(self, pt_start):
         ghosts_scatter = self.__get_ghosts_scatter(pt_start)

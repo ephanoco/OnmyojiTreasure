@@ -91,17 +91,9 @@ class RealmRaider(BattleConcluder):
         super().left_click(pt_ghost, 0.4)
         super().capture()
         tmpl_mark = self.dict_realm_raid['mark']
-        is_marked_light = len(super().match(tmpl_mark['path'], False,
-                                            thresh_mul=tmpl_mark['thresh_mul'])) != 0
-        print(f'is_marked[light]: {is_marked_light}')
-        if is_marked_light:
-            is_marked = True
-        else:
-            tmpl_mark_dark = self.dict_realm_raid['mark_dark']
-            is_marked = (len(
-                super().match(tmpl_mark_dark['path'], False,
-                              thresh_mul=tmpl_mark_dark['thresh_mul'])) != 0)
-            print(f'is_marked[dark]: {is_marked}')
+        is_marked = len(super().match(tmpl_mark['path'], False,
+                                      thresh_mul=tmpl_mark['thresh_mul'])) != 0
+        print(f'is_marked: {is_marked}')
         if not is_marked:
             self.__mark_ghost(pt_ghost, times=times + 1)
 
@@ -120,18 +112,11 @@ class RealmRaider(BattleConcluder):
         """
         super().capture()
         tmpl_nickname = self.dict_realm_raid['nickname']
-        pt_nickname_light_list = super().match(tmpl_nickname['path'], False,
-                                               thresh_mul=tmpl_nickname['thresh_mul'])
-        print(f'pt_nickname_list[light]: {pt_nickname_light_list}')
-        if pt_nickname_light_list:
-            return pt_nickname_light_list[0]
-        tmpl_nickname_dark = self.dict_realm_raid['nickname_dark']
-        pt_nickname_dark_list = super().match(tmpl_nickname_dark['path'], False,
-                                              thresh_mul=tmpl_nickname_dark['thresh_mul'])
-        print(f'pt_nickname_list[dark]: {pt_nickname_dark_list}')
-        if pt_nickname_dark_list:
-            return pt_nickname_dark_list[0]
-        time.sleep(0.2)  # XXX
+        pt_nickname_list = super().match(tmpl_nickname['path'], False,
+                                         thresh_mul=tmpl_nickname['thresh_mul'])
+        print(f'pt_nickname_list: {pt_nickname_list}')
+        if pt_nickname_list:
+            return pt_nickname_list[0]
         return self.__get_pt_nickname()
 
     def __get_scatter(self, mode):

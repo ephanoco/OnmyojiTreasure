@@ -37,16 +37,8 @@ tmpl_dict = {
                 'path': util.get_path(f'{tmpl_root}exploration/realm_raid/nickname.png'),
                 'thresh_mul': 0.8,
             },
-            'nickname_dark': {
-                'path': util.get_path(f'{tmpl_root}exploration/realm_raid/nickname_dark.png'),
-                'thresh_mul': 0.8,
-            },
             'mark': {
                 'path': util.get_path(f'{tmpl_root}exploration/realm_raid/mark.png'),
-                'thresh_mul': 0.8,
-            },
-            'mark_dark': {
-                'path': util.get_path(f'{tmpl_root}exploration/realm_raid/mark_dark.png'),
                 'thresh_mul': 0.8,
             },
             'close': {

@@ -194,5 +194,6 @@ if __name__ == '__main__':
     #     False,
     #     classif=2)
     # print(f'train_kp: {train_kp}')
-    pt_list = matcher.match(util.get_path('static/templates/exploration/soul_zones/sougenbi_btn.png'), False)
+    pt_list = matcher.match(util.get_path('static/templates/exploration/realm_raid/mark_dark.png'), False,
+                            thresh_mul=0.8)
     print(f'pt_list: {pt_list}')
