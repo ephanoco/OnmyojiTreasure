@@ -65,7 +65,7 @@ class RealmRaider(BattleConcluder):
             super().left_click(scatter[cur_index + 1], (1, 2))
             return self.__guild_raid(is_cooldown, str(cur_index + 1))
 
-        time.sleep(3)
+        time.sleep(2)
         self.__mark_ghost()
 
         def __vic_cb():
@@ -103,7 +103,8 @@ class RealmRaider(BattleConcluder):
         :return:shikigami coordinates
         """
         cx, cy = self.__get_pt_nickname()
-        return cx + 6, cy + 74
+        time.sleep(1)
+        return cx - 4, cy + 70
 
     def __get_pt_nickname(self):
         """
@@ -178,7 +179,7 @@ class RealmRaider(BattleConcluder):
                     ran_out_cb()
                 return
 
-            time.sleep(3)
+            time.sleep(2)
         self.__mark_ghost()
 
         def __vic_cb():

@@ -23,13 +23,14 @@ class Window(Util):
         #     if 'MuMu模拟器' in wnd_text:
         #         return hwnd
         print('Please place the cursor inside the window to get a handle.')
-        super().countdown(10)
+        # super().countdown(10)
         pt = win32api.GetCursorPos()
         hwnd = win32gui.WindowFromPoint(pt)
         print(f'hwnd: {hwnd}')
         wnd_text = self.__get_wnd_text(hwnd)
         print(f'wnd_text: {wnd_text}')
-        return hwnd
+        # return hwnd
+        return 197932
 
     @staticmethod
     def __get_wnd_text(hwnd):
