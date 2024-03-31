@@ -1,4 +1,4 @@
-# onmyoji_treasure
+# OnmyojiTreasure
 
 [//]: # (## Description)
 
