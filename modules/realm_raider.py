@@ -6,12 +6,14 @@
 import time
 
 from modules.common.battle_concluder import BattleConcluder
+from utils.matcher import Matcher
 from utils.tmpl_dict import tmpl_dict
 
 
-class RealmRaider(BattleConcluder):
-    def __init__(self):
-        super().__init__()
+class RealmRaider:
+    def __init__(self, matcher: Matcher, battle_concluder: BattleConcluder):
+        self.matcher = matcher
+        self.battle_concluder = battle_concluder
         self.dict_realm_raid = tmpl_dict['exploration']['realm_raid']
         self.guild_defeated_count = 0
 
@@ -38,14 +40,14 @@ class RealmRaider(BattleConcluder):
         # Choose the realm
         scatter = self.__get_scatter('guild')
         cur_index = self.guild_defeated_count if not index else int(index)
-        super().left_click(scatter[cur_index], (1, 2))
+        self.matcher.left_click(scatter[cur_index], (1, 2))
 
         tmpl_raid = self.dict_realm_raid['raid']
-        pt_raid_list = super().match(tmpl_raid['path'],
-                                     thresh_mul=tmpl_raid['thresh_mul']) if not is_cooldown else [
-            super().match(tmpl_raid['path'], is_multiple=tmpl_raid['is_multiple'],
-                          thresh_sgl=tmpl_raid['thresh_sgl'],
-                          is_with_colour=tmpl_raid['is_with_colour'])]
+        pt_raid_list = self.matcher.match(tmpl_raid['path'],
+                                          thresh_mul=tmpl_raid['thresh_mul']) if not is_cooldown else [
+            self.matcher.match(tmpl_raid['path'], is_multiple=tmpl_raid['is_multiple'],
+                               thresh_sgl=tmpl_raid['thresh_sgl'],
+                               is_with_colour=tmpl_raid['is_with_colour'])]
         print(f'pt_raid_list: {pt_raid_list}')
         if not is_cooldown:
             # Successful penetration
@@ -55,14 +57,14 @@ class RealmRaider(BattleConcluder):
             # Cooldown
             if not pt_raid_list[0]:
                 time.sleep(1800)
-                super().left_click(scatter[cur_index + 1], (1, 2))
+                self.matcher.left_click(scatter[cur_index + 1], (1, 2))
                 return self.__guild_raid(True, str(cur_index))
-        super().left_click(pt_raid_list[0], 2)  # Raid
+        self.matcher.left_click(pt_raid_list[0], 2)  # Raid
         # The realm has been raided
-        pt_raid_list = super().match(tmpl_raid['path'],
-                                     thresh_mul=tmpl_raid['thresh_mul'])
+        pt_raid_list = self.matcher.match(tmpl_raid['path'],
+                                          thresh_mul=tmpl_raid['thresh_mul'])
         if pt_raid_list:
-            super().left_click(scatter[cur_index + 1], (1, 2))
+            self.matcher.left_click(scatter[cur_index + 1], (1, 2))
             return self.__guild_raid(is_cooldown, str(cur_index + 1))
 
         time.sleep(2)
@@ -76,7 +78,7 @@ class RealmRaider(BattleConcluder):
             if self.guild_defeated_count <= len(scatter):
                 self.__guild_raid(is_cooldown)
 
-        super().conclude_battle(10, __vic_cb, def_cb=__def_cb)
+        self.battle_concluder.conclude_battle(10, __vic_cb, def_cb=__def_cb)
 
     def __mark_ghost(self, pt=(), times=0):
         """
@@ -88,11 +90,11 @@ class RealmRaider(BattleConcluder):
         if times == 10:
             return
         pt_ghost = self.__get_pt_ghost() if not pt else pt
-        super().left_click(pt_ghost, 0.4)
-        super().capture()
+        self.matcher.left_click(pt_ghost, 0.4)
+        self.matcher.capture()
         tmpl_mark = self.dict_realm_raid['mark']
-        is_marked = len(super().match(tmpl_mark['path'], False,
-                                      thresh_mul=tmpl_mark['thresh_mul'])) != 0
+        is_marked = len(self.matcher.match(tmpl_mark['path'], False,
+                                           thresh_mul=tmpl_mark['thresh_mul'])) != 0
         print(f'is_marked: {is_marked}')
         if not is_marked:
             self.__mark_ghost(pt_ghost, times=times + 1)
@@ -111,10 +113,10 @@ class RealmRaider(BattleConcluder):
         Get Shikigami nickname coordinates.
         :return:Shikigami nickname coordinates
         """
-        super().capture()
+        self.matcher.capture()
         tmpl_nickname = self.dict_realm_raid['nickname']
-        pt_nickname_list = super().match(tmpl_nickname['path'], False,
-                                         thresh_mul=tmpl_nickname['thresh_mul'])
+        pt_nickname_list = self.matcher.match(tmpl_nickname['path'], False,
+                                              thresh_mul=tmpl_nickname['thresh_mul'])
         print(f'pt_nickname_list: {pt_nickname_list}')
         if pt_nickname_list:
             return pt_nickname_list[0]
@@ -131,9 +133,9 @@ class RealmRaider(BattleConcluder):
             pt_realm_buffs = self.dict_realm_raid['realm_buffs']['pt']  # (230, 238)
             if not pt_realm_buffs:
                 tmpl_buffs = self.dict_realm_raid['realm_buffs']
-                pt_realm_buffs = self.dict_realm_raid['realm_buffs']['pt'] = super().match(tmpl_buffs['path'],
-                                                                                           thresh_mul=tmpl_buffs[
-                                                                                               'thresh_mul'])[0]
+                pt_realm_buffs = self.dict_realm_raid['realm_buffs']['pt'] = self.matcher.match(tmpl_buffs['path'],
+                                                                                                thresh_mul=tmpl_buffs[
+                                                                                                    'thresh_mul'])[0]
             cx, cy = pt_realm_buffs
             scatter = self.dict_realm_raid[mode]['scatter'] = [(cx + 285, cy - 20), (cx + 551, cy - 20),
                                                                (cx + 816, cy - 20), (cx + 285, cy + 88),
@@ -163,16 +165,16 @@ class RealmRaider(BattleConcluder):
             self.__retreat_two(scatter)
 
         if not is_retreat_two:
-            super().left_click(scatter[cur_index], (1, 2))
+        self.matcher.left_click(scatter[cur_index], (1, 2))
 
             tmpl_raid = self.dict_realm_raid['raid']
-            pt_raid_list = super().match(tmpl_raid['path'], thresh_mul=tmpl_raid['thresh_mul'])
+            pt_raid_list = self.matcher.match(tmpl_raid['path'], thresh_mul=tmpl_raid['thresh_mul'])
             print(f'pt_raid_list: {pt_raid_list}')
             # The realm has been raided
             if not pt_raid_list:
                 return self.__individual_raid(str(cur_index + 1))
-            super().left_click(pt_raid_list[0], 2)  # Raid
-            pt_raid_list = super().match(tmpl_raid['path'], thresh_mul=tmpl_raid['thresh_mul'])
+            self.matcher.left_click(pt_raid_list[0], 2)  # Raid
+            pt_raid_list = self.matcher.match(tmpl_raid['path'], thresh_mul=tmpl_raid['thresh_mul'])
             # Passes ran out
             if pt_raid_list:
                 if ran_out_cb:
@@ -187,29 +189,29 @@ class RealmRaider(BattleConcluder):
             if cur_index == 2 or cur_index == 5 or cur_index == 8:
                 pt_vic = self.__get_rel_pt('realm_buffs', 'victory')
                 time.sleep(1)
-                super(RealmRaider, self).left_click(pt_vic, (1, 2))  # XXX
+                self.matcher.left_click(pt_vic, (1, 2))  # XXX
 
             if cur_index < 8:
                 self.__individual_raid(str(cur_index + 1))
             else:
                 # Lock the lineup
                 pt_lock = self.__get_rel_pt('realm_buffs', 'lock')
-                super(RealmRaider, self).left_click(pt_lock, (1, 2))
+                self.matcher.left_click(pt_lock, (1, 2))
 
                 self.__individual_raid()
 
-        super().conclude_battle(10, __vic_cb, False)
+        self.battle_concluder.conclude_battle(10, __vic_cb, False)
 
     def __retreat_two(self, scatter):
         # Unlock the lineup
         pt_lock = self.__get_rel_pt('realm_buffs', 'lock')
-        super().left_click(pt_lock, (1, 2))
-        super().left_click(scatter[-1], (1, 2))  # Choose the realm
+        self.matcher.left_click(pt_lock, (1, 2))
+        self.matcher.left_click(scatter[-1], (1, 2))  # Choose the realm
         tmpl_raid = self.dict_realm_raid['raid']
-        pt_raid = super().match(tmpl_raid['path'], thresh_mul=tmpl_raid['thresh_mul'])[0]
+        pt_raid = self.matcher.match(tmpl_raid['path'], thresh_mul=tmpl_raid['thresh_mul'])[0]
         print(f'pt_raid: {pt_raid}')
-        super().left_click(pt_raid, 2)  # Raid
-        pt_raid_list = super().match(tmpl_raid['path'], thresh_mul=tmpl_raid['thresh_mul'])
+        self.matcher.left_click(pt_raid, 2)  # Raid
+        pt_raid_list = self.matcher.match(tmpl_raid['path'], thresh_mul=tmpl_raid['thresh_mul'])
         # Passes ran out
         if pt_raid_list:
             return
@@ -232,7 +234,7 @@ class RealmRaider(BattleConcluder):
         tmpl_battle_buffs = self.dict_realm_raid['individual']['battle_buffs']
         if not pt_battle_buffs:
             pt_battle_buffs = self.dict_realm_raid['individual']['battle_buffs']['pt'] = \
-                super().match(tmpl_battle_buffs['path'], thresh_mul=tmpl_battle_buffs['thresh_mul'])[0]
+                self.matcher.match(tmpl_battle_buffs['path'], thresh_mul=tmpl_battle_buffs['thresh_mul'])[0]
         print(f'pt_battle_buffs: {pt_battle_buffs}')
         return pt_battle_buffs
 
@@ -264,5 +266,7 @@ class RealmRaider(BattleConcluder):
 
 
 if __name__ == '__main__':
-    realm_raider = RealmRaider()
+    matcher = Matcher()
+    bc = BattleConcluder(matcher)
+    realm_raider = RealmRaider(matcher, bc)
     realm_raider.raid(False)

@@ -9,9 +9,9 @@ from utils.matcher import Matcher
 from utils.tmpl_dict import tmpl_dict
 
 
-class BattleConcluder(Matcher):
-    def __init__(self):
-        super().__init__()
+class BattleConcluder:
+    def __init__(self, matcher: Matcher):
+        self.matcher = matcher
         self.dict_common = tmpl_dict['exploration']['common']
 
     def conclude_battle(self, first_loop_delay, vic_cb, is_loop_def=True, def_cb=None):
@@ -30,19 +30,19 @@ class BattleConcluder(Matcher):
                 is_first_loop = False
             else:
                 time.sleep(1)
-            super().capture()
+            self.matcher.capture()
             tmpl_victory = self.dict_common['victory']
-            pt_victory_list = super().match(tmpl_victory['path'], False,
-                                            thresh_mul=tmpl_victory['thresh_mul'])
+            pt_victory_list = self.matcher.match(tmpl_victory['path'], False,
+                                                 thresh_mul=tmpl_victory['thresh_mul'])
             if pt_victory_list:
                 time.sleep(1)
-                super().left_click(pt_victory_list[0], (4, 5))
+                self.matcher.left_click(pt_victory_list[0], (4, 5))
                 vic_cb()
                 break
-            pt_defeat_list = super().match(self.dict_common['defeat']['path'], False)
+            pt_defeat_list = self.matcher.match(self.dict_common['defeat']['path'], False)
             if pt_defeat_list:
                 if is_loop_def:
-                    super().left_click(pt_defeat_list[0], (4, 5))
+                    self.matcher.left_click(pt_defeat_list[0], (4, 5))
                 if def_cb:
                     def_cb()
                 break

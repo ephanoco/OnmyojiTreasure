@@ -7,12 +7,15 @@ import time
 
 from modules.common.battle_concluder import BattleConcluder
 from modules.realm_raider import RealmRaider
+from utils.matcher import Matcher
 from utils.tmpl_dict import tmpl_dict
 
 
-class SoulZonesChallenger(BattleConcluder):
-    def __init__(self):
-        super().__init__()
+class SoulZonesChallenger:
+    def __init__(self, matcher: Matcher, battle_concluder: BattleConcluder, realm_raider: RealmRaider | None = None):
+        self.matcher = matcher
+        self.battle_concluder = battle_concluder
+        self.realm_raider = realm_raider
         self.dict_exploration = tmpl_dict['exploration']
         self.count = 0
 
@@ -27,12 +30,12 @@ class SoulZonesChallenger(BattleConcluder):
         tmpl_challenge = self.dict_exploration['soul_zones']['sougenbi']['challenge']
         if not pt_challenge:
             pt_challenge = self.dict_exploration['soul_zones']['sougenbi']['challenge']['pt'] = \
-                super().match(tmpl_challenge['path'],
-                              thresh_mul=tmpl_challenge['thresh_mul'])[0]
-        super().left_click(pt_challenge, 2)
+                self.matcher.match(tmpl_challenge['path'],
+                                   thresh_mul=tmpl_challenge['thresh_mul'])[0]
+        self.matcher.left_click(pt_challenge, 2)
 
-        pt_challenge_list = super().match(tmpl_challenge['path'],
-                                          thresh_mul=tmpl_challenge['thresh_mul'])
+        pt_challenge_list = self.matcher.match(tmpl_challenge['path'],
+                                               thresh_mul=tmpl_challenge['thresh_mul'])
         # Scrolls ran out
         if pt_challenge_list:
             return
@@ -52,7 +55,7 @@ class SoulZonesChallenger(BattleConcluder):
 
             self.challenge_sougenbi(is_empty)
 
-        super().conclude_battle(39, vic_cb, False)  # first_loop_delay: 17
+        self.battle_concluder.conclude_battle(39, vic_cb, False)  # first_loop_delay: 17
 
     def __empty_passes(self, is_empty):
         """
@@ -62,35 +65,35 @@ class SoulZonesChallenger(BattleConcluder):
         """
         # Return to the exploration
         pt_return = self.__get_rel_pt('challenge', 'return')
-        super().left_click(pt_return, (1, 2))
+        self.matcher.left_click(pt_return, (1, 2))
         # Access the realm raid
         pt_realm_raid = self.dict_exploration['realm_raid_btn']['pt']
         tmpl_realm_raid = self.dict_exploration['realm_raid_btn']
         if not pt_realm_raid:
             pt_realm_raid = self.dict_exploration['realm_raid_btn']['pt'] = \
-                super().match(tmpl_realm_raid['path'],
-                              thresh_mul=tmpl_realm_raid['thresh_mul'])[0]
-        super().left_click(pt_realm_raid, (1, 2))
+                self.matcher.match(tmpl_realm_raid['path'],
+                                   thresh_mul=tmpl_realm_raid['thresh_mul'])[0]
+        self.matcher.left_click(pt_realm_raid, (1, 2))
 
         def ran_out_cb():
             # Return to the exploration
             pt_close = self.dict_exploration['realm_raid']['close']['pt']
             if not pt_close:
                 pt_close = self.dict_exploration['realm_raid']['close']['pt'] = \
-                    super().match(self.dict_exploration['realm_raid']['close']['path'])[0]
-            super().left_click(pt_close, (1, 2))
+                    self.matcher.match(self.dict_exploration['realm_raid']['close']['path'])[0]
+            self.matcher.left_click(pt_close, (1, 2))
             # Access Sougenbi
             pt_soul_zones_btn = self.__get_rel_pt('realm_raid_btn', 'soul_zones_btn')
-            super().left_click(pt_soul_zones_btn, (1, 2))
+            self.matcher.left_click(pt_soul_zones_btn, (1, 2))
             pt_sougenbi_btn = self.dict_exploration['soul_zones']['sougenbi_btn']['pt']
             if not pt_sougenbi_btn:
                 pt_sougenbi_btn = self.dict_exploration['soul_zones']['sougenbi_btn']['pt'] = \
-                    super().match(self.dict_exploration['soul_zones']['sougenbi_btn']['path'])[0]
-            super().left_click(pt_sougenbi_btn, (1, 2))
+                    self.matcher.match(self.dict_exploration['soul_zones']['sougenbi_btn']['path'])[0]
+            self.matcher.left_click(pt_sougenbi_btn, (1, 2))
 
         if is_empty:
-            realm_raider = RealmRaider()
-            realm_raider.raid(True, False, ran_out_cb)
+            rr = self.realm_raider or RealmRaider(self.matcher, self.battle_concluder)
+            rr.raid(True, False, ran_out_cb)
 
     def __get_rel_pt(self, ref, rel):
         """
@@ -116,5 +119,8 @@ class SoulZonesChallenger(BattleConcluder):
 
 
 if __name__ == '__main__':
-    soul_zones_challenger = SoulZonesChallenger()
+    matcher = Matcher()
+    bc = BattleConcluder(matcher)
+    rr = RealmRaider(matcher, bc)
+    soul_zones_challenger = SoulZonesChallenger(matcher, bc, rr)
     soul_zones_challenger.challenge_sougenbi()
